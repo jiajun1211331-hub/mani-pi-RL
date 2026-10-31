@@ -1,4 +1,5 @@
 !environment-constraints.txt
 !requirements-runtime-replay.txt
+!step_metric.txt
 !provenance/baseline/manifests/pip_freeze.txt
 !provenance/migration/**/*.txt
