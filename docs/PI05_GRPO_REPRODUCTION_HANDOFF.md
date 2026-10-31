@@ -77,9 +77,13 @@ tar --exclude=__pycache__ --exclude='*.pyc' -czf /vepfs-C区/jiajunlu/pi_rl-hand
   tests/test_pi_rl_*.py docs/pi_rl \
   docs/PI05_GRPO_REPRODUCTION_HANDOFF.md \
   docs/manifold/pi_rl docs/GRPO_BASE_VOLC_QUEUE2_HANDOFF_20261019.md
+(
+  cd /vepfs-C区/jiajunlu
+  sha256sum pi_rl-handoff-overlay.tar.gz > pi_rl-handoff-overlay.tar.gz.sha256
+)
 ```
 
-将压缩包传到新服务器，执行：
+将压缩包和 `.sha256` 一起传到新服务器，先在它们所在目录运行 `sha256sum -c pi_rl-handoff-overlay.tar.gz.sha256`，再执行：
 
 ```bash
 git clone https://github.com/RLinf/RLinf.git "$PIRL_REPO"

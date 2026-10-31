@@ -75,9 +75,13 @@ tar --exclude=__pycache__ --exclude='*.pyc' -czf /vepfs-C区/jiajunlu/pi_rl-hand
   tests/test_pi_rl_*.py docs/pi_rl \
   docs/PI05_GRPO_REPRODUCTION_HANDOFF.md \
   docs/manifold/pi_rl docs/GRPO_BASE_VOLC_QUEUE2_HANDOFF_20261019.md
+(
+  cd /vepfs-C区/jiajunlu
+  sha256sum pi_rl-handoff-overlay.tar.gz > pi_rl-handoff-overlay.tar.gz.sha256
+)
 ```
 
-Transfer the archive and check out the exact official source before extracting it:
+Transfer the archive and its .sha256 file. Run sha256sum -c pi_rl-handoff-overlay.tar.gz.sha256 in their directory, then check out the exact official source before extracting:
 
 ```bash
 git clone https://github.com/RLinf/RLinf.git "$PIRL_REPO"

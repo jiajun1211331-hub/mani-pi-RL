@@ -1,0 +1,383 @@
+--- a/scripts/pi_rl/accept_sft.py
++++ b/scripts/pi_rl/accept_sft.py
+@@ -9,7 +9,7 @@
+ import subprocess
+ from pathlib import Path
+ 
+-from prepare_run import ASSET_ROOT, OFFICIAL_COMMIT, SFT_REVISION, sha256
++from prepare_run import asset_root, OFFICIAL_COMMIT, SFT_REVISION, sha256
+ from summarize_eval import summarize
+ 
+ 
+@@ -48,7 +48,7 @@
+                 failures.append(f"SFT file changed: {entry['path']}")
+         assets = json.loads((run / "manifests/libero_assets.json").read_text())
+         for entry in assets["files"]:
+-            file = ASSET_ROOT / entry["path"]
++            file = asset_root(state) / entry["path"]
+             if not file.is_file() or sha256(file) != entry["sha256"]:
+                 failures.append(f"LIBERO input asset changed: {entry['path']}")
+     repo = Path(state["rlinf_repo"])
+--- a/scripts/pi_rl/compare_results.py
++++ b/scripts/pi_rl/compare_results.py
+@@ -136,6 +136,9 @@
+     parser.add_argument("--run", required=True, type=Path)
+     args = parser.parse_args()
+     run = args.run.resolve()
++    from omegaconf import OmegaConf
++
++    cfg = OmegaConf.load(run / "configs/formal.yaml")
+     acceptance = json.loads((run / "reports/sft_acceptance.json").read_text())
+     lifecycle = json.loads((run / "train/formal/reports/lifecycle.json").read_text())
+     if not acceptance["passed"] or not lifecycle["passed"]:
+@@ -169,6 +172,7 @@
+         "official_commit": acceptance["official_commit"],
+         "source_tree_sha256": lifecycle["source_tree_sha256"],
+         "formal_config_sha256": lifecycle["config_sha256"],
++        "actual_outer_steps": cfg.runner.max_epochs,
+         "paper_reference": {
+             "sft_spatial": 0.846,
+             "grpo_spatial": 0.974,
+@@ -176,7 +180,7 @@
+             "current_official_epochs": 1000,
+         },
+         "limitations": [
+-            "Current fixed official recipe uses twice the paper's tabulated outer budget.",
++            f"Actual frozen run uses {cfg.runner.max_epochs} outer steps; the official default is 1000 and the paper table lists 500.",
+             "Actual train/eval hardware must be read from their runtime manifests; the paper used H100.",
+             "Legacy external OpenPI BF16 action equality did not pass the initial 1e-3 test; all main SFT/RL results use the same frozen native implementation.",
+             "The 220 and 240 protocols also differ in seed and settling; their difference is not a causal estimate of the horizon effect.",
+@@ -199,7 +203,7 @@
+             )
+     lines += [
+         "",
+-        "论文参考为 SFT 84.6%、GRPO/Flow-SDE 97.4%。本次当前官方配置为 1000 外层步；论文通用表为 500 epoch。",
++        f"论文参考为 SFT 84.6%、GRPO/Flow-SDE 97.4%。本次冻结配置为 {cfg.runner.max_epochs} 外层步；官方默认 1000，论文通用表为 500 epoch。",
+         "",
+     ]
+     for name, result in results.items():
+--- /dev/null
++++ b/scripts/pi_rl/initialize_run.py
+@@ -0,0 +1,116 @@
++#!/usr/bin/env python3
++# Copyright 2026 The RLinf Authors.
++"""Create a fresh run manifest and freeze its evaluation scripts before installation."""
++
++from __future__ import annotations
++
++import argparse
++import datetime
++import json
++import shutil
++import subprocess
++from pathlib import Path
++
++from prepare_run import OFFICIAL_COMMIT, SFT_REVISION, prepare, sha256, write_json
++from training_policy import budget_overrides
++
++
++def initialize(args: argparse.Namespace) -> None:
++    repo = args.repo.resolve()
++    commit = subprocess.check_output(
++        ["git", "rev-parse", "HEAD"], cwd=repo, text=True
++    ).strip()
++    if commit != OFFICIAL_COMMIT:
++        raise RuntimeError(
++            f"Expected official commit {OFFICIAL_COMMIT}; found {commit}"
++        )
++    assets = args.asset_root.resolve()
++    for name in ["assets", "bddl_files/libero_spatial", "init_files/libero_spatial"]:
++        if not (assets / name).is_dir():
++            raise RuntimeError(f"Missing simulator input directory: {assets / name}")
++    harness_repo = Path(__file__).resolve().parents[2]
++    info_path = harness_repo / "docs/pi_rl/provenance/baseline/manifests/hf_model_info.json"
++    info = json.loads(info_path.read_text())
++    if info["sha"] != SFT_REVISION:
++        raise RuntimeError("The bundled model metadata has an unexpected revision")
++    run = args.run.resolve()
++    state = {
++        "run_id": run.name,
++        "run_root": str(run),
++        "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
++        "rlinf_repo": str(repo),
++        "rlinf_commit": commit,
++        "environment": str(args.environment.resolve()),
++        "asset_root": str(assets),
++        "sft_model": info["repo_id"],
++        "sft_revision": SFT_REVISION,
++        "sft_path": str(args.sft.resolve()),
++        "scope": ["libero_spatial"],
++        "save_video": False,
++        "openpi_data_home": str(run / "runtime/model_assets/.cache/openpi"),
++        "status": "initialized_not_validated",
++        "training_policy": {
++            "outer_steps": args.outer_steps,
++            "save_interval": args.save_interval,
++            "cloud_preflight": "separate",
++            "local_lifecycle": "same_snapshot",
++        },
++    }
++    budget_overrides(state)
++    if args.volc_config:
++        cloud = json.loads(args.volc_config.read_text())
++        required = {"queue_id", "flavor", "image_url", "mount_path", "vepfs_id"}
++        if set(cloud) != required or not all(
++            isinstance(x, str) and x for x in cloud.values()
++        ):
++            raise ValueError(f"Volc configuration requires exactly {sorted(required)}")
++        state["volc"] = cloud
++    run.mkdir(parents=True, exist_ok=False)
++    for name in [
++        "manifests",
++        "configs",
++        "reports",
++        "train",
++        "eval/sft",
++        "eval/rl",
++        "runtime/libero_config",
++        "runtime/tmp",
++        "runtime/torch_extensions",
++    ]:
++        (run / name).mkdir(parents=True, exist_ok=True)
++    write_json(run / "manifests/run.json", state)
++    shutil.copy2(info_path, run / "manifests/hf_model_info.json")
++    frozen = run / "scripts/eval_snapshot"
++    frozen.mkdir(parents=True)
++    for script in Path(__file__).resolve().parent.glob("*.py"):
++        shutil.copy2(script, frozen / script.name)
++    write_json(
++        run / "manifests/evaluation_source_snapshot.json",
++        {
++            "directory": str(frozen),
++            "files": {p.name: sha256(p) for p in sorted(frozen.glob("*.py"))},
++        },
++    )
++    prepare(run, state)
++    for script in frozen.glob("*.py"):
++        script.chmod(0o444)
++    print(json.dumps({"run": str(run), "initialized": True, "validated": False}))
++
++
++def main() -> None:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--run", required=True, type=Path)
++    parser.add_argument(
++        "--repo", type=Path, default=Path(__file__).resolve().parents[2]
++    )
++    parser.add_argument("--environment", required=True, type=Path)
++    parser.add_argument("--sft", required=True, type=Path)
++    parser.add_argument("--asset-root", required=True, type=Path)
++    parser.add_argument("--outer-steps", type=int, default=200)
++    parser.add_argument("--save-interval", type=int, default=40)
++    parser.add_argument("--volc-config", type=Path)
++    initialize(parser.parse_args())
++
++
++if __name__ == "__main__":
++    main()
+--- a/scripts/pi_rl/launch_training.py
++++ b/scripts/pi_rl/launch_training.py
+@@ -238,6 +238,7 @@
+             "EMBODIED_PATH": str(official / "examples/embodiment"),
+             "LIBERO_CONFIG_PATH": str(run / "runtime/libero_config"),
+             "DOWNLOAD_DIR": str(run / "runtime/model_assets"),
++            "OPENPI_DATA_HOME": str(run / "runtime/model_assets/.cache/openpi"),
+             "MUJOCO_GL": "egl",
+             "PYOPENGL_PLATFORM": "egl",
+             "ROBOT_PLATFORM": "LIBERO",
+--- a/scripts/pi_rl/prepare_run.py
++++ b/scripts/pi_rl/prepare_run.py
+@@ -18,6 +18,11 @@
+ OFFICIAL_COMMIT = "30e0236981c6a1dc19202de64116834c12673828"
+ SFT_REVISION = "45ccfcc4e28634f1576ebf78cab0fbe2fd82432d"
+ ASSET_ROOT = Path("/vepfs-C区/jiajunlu/LIBERO/libero/libero")
++
++
++def asset_root(state: dict) -> Path:
++    """Resolve a run's simulator assets, including legacy run manifests."""
++    return Path(state.get("asset_root", str(ASSET_ROOT))).resolve()
+ 
+ 
+ def sha256(path: Path) -> str:
+@@ -129,6 +134,7 @@
+         "PIRL_SFT": state["sft_path"],
+         "LIBERO_CONFIG_PATH": str(run / "runtime/libero_config"),
+         "DOWNLOAD_DIR": str(run / "runtime/model_assets"),
++        "OPENPI_DATA_HOME": str(run / "runtime/model_assets/.cache/openpi"),
+         "MUJOCO_GL": "egl",
+         "PYOPENGL_PLATFORM": "egl",
+         "ROBOT_PLATFORM": "LIBERO",
+@@ -167,6 +173,7 @@
+     import yaml
+     from libero import libero
+ 
++    assets = asset_root(state)
+     config_dir = run / "runtime/libero_config"
+     if Path(os.environ.get("LIBERO_CONFIG_PATH", "")).resolve() != config_dir.resolve():
+         raise RuntimeError("LIBERO_CONFIG_PATH must point at this run's private config")
+@@ -181,7 +188,7 @@
+     comparisons = []
+     for group in ["bddl_files", "init_files"]:
+         installed = package / group / "libero_spatial"
+-        existing = ASSET_ROOT / group / "libero_spatial"
++        existing = assets / group / "libero_spatial"
+         for expected in sorted(installed.iterdir()):
+             if expected.suffix not in [".bddl", ".pruned_init"]:
+                 continue
+@@ -202,20 +209,20 @@
+             "Spatial BDDL/init assets differ from the installed official package"
+         )
+     for directory in ["articulated_objects", "scenes", "stable_hope_objects"]:
+-        if not (ASSET_ROOT / "assets" / directory).is_dir():
++        if not (assets / "assets" / directory).is_dir():
+             raise RuntimeError(f"Missing reusable LIBERO assets: {directory}")
+     package_assets = package / "assets"
+     if not package_assets.exists():
+-        package_assets.symlink_to(ASSET_ROOT / "assets", target_is_directory=True)
+-    elif package_assets.resolve() != (ASSET_ROOT / "assets").resolve():
++        package_assets.symlink_to(assets / "assets", target_is_directory=True)
++    elif package_assets.resolve() != (assets / "assets").resolve():
+         raise RuntimeError(
+             f"Refusing to overwrite installed asset directory {package_assets}"
+         )
+     cfg = {
+         "benchmark_root": str(package),
+-        "assets": str(ASSET_ROOT / "assets"),
+-        "bddl_files": str(ASSET_ROOT / "bddl_files"),
+-        "init_states": str(ASSET_ROOT / "init_files"),
++        "assets": str(assets / "assets"),
++        "bddl_files": str(assets / "bddl_files"),
++        "init_states": str(assets / "init_files"),
+         "datasets": str(run / "runtime/unused_datasets"),
+     }
+     config_dir.mkdir(parents=True, exist_ok=True)
+@@ -223,7 +230,7 @@
+     for key, expected in cfg.items():
+         if libero.get_libero_path(key) != expected:
+             raise RuntimeError(f"Private LIBERO path mismatch for {key}")
+-    asset_files = [p for p in sorted((ASSET_ROOT / "assets").rglob("*")) if p.is_file()]
++    asset_files = [p for p in sorted((assets / "assets").rglob("*")) if p.is_file()]
+     write_json(
+         run / "manifests/libero_assets.json",
+         {
+@@ -233,7 +240,7 @@
+             "private_config": cfg,
+             "files": [
+                 {
+-                    "path": str(p.relative_to(ASSET_ROOT)),
++                    "path": str(p.relative_to(assets)),
+                     "bytes": p.stat().st_size,
+                     "sha256": sha256(p),
+                 }
+--- a/scripts/pi_rl/prepare_training.py
++++ b/scripts/pi_rl/prepare_training.py
+@@ -167,6 +167,7 @@
+         ).hexdigest(),
+         "scope": "Official git archive plus observation/gating/launch harness. No numerical source changes. Finite phases are separate experiments; formal uses the audited recipe and any explicitly recorded user budget overrides.",
+     }
++    cloud = state.get("volc", {})
+     for phase in ["cloud-preflight", "formal"]:
+         command = [
+             state["environment"] + "/bin/python",
+@@ -188,7 +189,7 @@
+             ),
+             "Entrypoint": "bash -lc " + shlex.quote("exec " + shlex.join(command)),
+             "Framework": "PyTorchDDP",
+-            "ResourceQueueID": "q-20260403140809-n4flj",
++            "ResourceQueueID": cloud.get("queue_id", "q-20260403140809-n4flj"),
+             "UserCodePath": str(
+                 Path(__file__).resolve().parents[2] / "scripts/volc_empty_code"
+             ),
+@@ -203,17 +204,20 @@
+                 {
+                     "RoleName": "worker",
+                     "RoleReplicas": 1,
+-                    "Flavor": "ml.hpcpni2l.28xlarge",
++                    "Flavor": cloud.get("flavor", "ml.hpcpni2l.28xlarge"),
+                 }
+             ],
+-            "ImageUrl": "vemlp-cn-beijing.cr.volces.com/preset-images/pytorch:2.10.0-cu12.9.1-py3.13-ubuntu24.04",
++            "ImageUrl": cloud.get(
++                "image_url",
++                "vemlp-cn-beijing.cr.volces.com/preset-images/pytorch:2.10.0-cu12.9.1-py3.13-ubuntu24.04",
++            ),
+             "Storages": [
+                 {
+                     "Type": "Vepfs",
+-                    "MountPath": "/vepfs-C区",
++                    "MountPath": cloud.get("mount_path", "/vepfs-C区"),
+                     "ReadOnly": False,
+                     "SubPath": "",
+-                    "VepfsId": "vepfs-cnbjba6dad11eac7",
++                    "VepfsId": cloud.get("vepfs_id", "vepfs-cnbjba6dad11eac7"),
+                 }
+             ],
+             "AccessType": "Private",
+--- a/scripts/pi_rl/run_final_evaluation.py
++++ b/scripts/pi_rl/run_final_evaluation.py
+@@ -17,14 +17,15 @@
+ 
+ 
+ def final_checkpoint(run: Path, cfg, lifecycle: dict) -> Path:
+-    if cfg.runner.max_epochs != 1000 or cfg.runner.max_steps != -1:
++    steps = cfg.runner.max_epochs
++    if type(steps) is not int or steps <= 0 or cfg.runner.max_steps != -1:
+         raise RuntimeError(
+-            "Final evaluation requires the frozen official 1000-step budget"
++            "Final evaluation requires a positive frozen outer-step budget and max_steps=-1"
+         )
+     expected = (
+         Path(cfg.runner.logger.log_path)
+         / cfg.runner.logger.experiment_name
+-        / "checkpoints/global_step_1000/actor/model_state_dict/full_weights.pt"
++        / f"checkpoints/global_step_{steps}/actor/model_state_dict/full_weights.pt"
+     ).resolve()
+     if Path(lifecycle["checkpoint"]["path"]).resolve() != expected:
+         raise RuntimeError(
+--- a/scripts/pi_rl/runtime.py
++++ b/scripts/pi_rl/runtime.py
+@@ -18,6 +18,9 @@
+     sys.path.insert(0, str(repo))
+     os.environ["EMBODIED_PATH"] = str(repo / "examples/embodiment")
+     os.environ["LIBERO_CONFIG_PATH"] = str(run / "runtime/libero_config")
++    os.environ["OPENPI_DATA_HOME"] = state.get(
++        "openpi_data_home", str(run / "runtime/model_assets/.cache/openpi")
++    )
+     os.environ["ROBOT_PLATFORM"] = "LIBERO"
+     os.environ["LIBERO_TYPE"] = "standard"
+     os.environ["MUJOCO_GL"] = "egl"
+--- a/tests/test_pi_rl_comparison.py
++++ b/tests/test_pi_rl_comparison.py
+@@ -100,19 +100,20 @@
+         )
+ 
+ 
++@pytest.mark.parametrize("steps", [200, 1000])
+ @pytest.mark.parametrize(
+     "change", ["valid", "earlier", "budget", "max_steps", "content"]
+ )
+-def test_final_evaluation_uses_the_final_official_budget_checkpoint(tmp_path, change):
++def test_final_evaluation_uses_the_final_official_budget_checkpoint(tmp_path, change, steps):
+     full = (
+         tmp_path
+-        / "experiment/checkpoints/global_step_1000/actor/model_state_dict/full_weights.pt"
++        / f"experiment/checkpoints/global_step_{steps}/actor/model_state_dict/full_weights.pt"
+     )
+     full.parent.mkdir(parents=True)
+     full.write_bytes(b"checkpoint fixture")
+     cfg = SimpleNamespace(
+         runner=SimpleNamespace(
+-            max_epochs=1000,
++            max_epochs=steps,
+             max_steps=-1,
+             logger=SimpleNamespace(
+                 log_path=str(tmp_path), experiment_name="experiment"
+@@ -122,7 +123,7 @@
+     lifecycle = {"checkpoint": {"path": str(full), "sha256": comparison.sha256(full)}}
+     if change == "earlier":
+         lifecycle["checkpoint"]["path"] = str(full).replace(
+-            "global_step_1000", "global_step_960"
++            f"global_step_{steps}", f"global_step_{steps - 40}"
+         )
+     elif change == "budget":
+         cfg.runner.max_epochs = 500
