@@ -28,7 +28,8 @@ def initialize(args: argparse.Namespace) -> None:
     for name in ["assets", "bddl_files/libero_spatial", "init_files/libero_spatial"]:
         if not (assets / name).is_dir():
             raise RuntimeError(f"Missing simulator input directory: {assets / name}")
-    info_path = repo / "docs/pi_rl/provenance/baseline/manifests/hf_model_info.json"
+    harness_repo = Path(__file__).resolve().parents[2]
+    info_path = harness_repo / "docs/pi_rl/provenance/baseline/manifests/hf_model_info.json"
     info = json.loads(info_path.read_text())
     if info["sha"] != SFT_REVISION:
         raise RuntimeError("The bundled model metadata has an unexpected revision")

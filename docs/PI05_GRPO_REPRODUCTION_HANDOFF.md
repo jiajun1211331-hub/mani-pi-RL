@@ -36,33 +36,42 @@
 | CPU / RAM | 历史本地 20 逻辑 CPU、约 460GiB RAM；训练节点以 8 卡规格分配。较小 RAM 配置需重新测量 |
 | 共享内存 | launcher 检查 `/dev/shm` 至少空闲 8GiB；容器启动时配置足够的 `--shm-size` |
 | 存储 | launcher 检查运行盘至少空闲 200GiB；按 checkpoint 实测大小和保留数量规划，建议预留 0.5–1.5TiB |
-| 网络 / 工具 | Git、curl、uv、HF Hub；可访问固定 Git commit、Python wheel 和模型资产来源 |
+| 网络 / 工具 | Git、curl、rsync、Python 3/venv；下方安装 uv。可访问固定 Git commit、Python wheel 和模型资产来源 |
+
+Ubuntu 最小系统先由管理员准备 `git curl rsync python3-venv build-essential`（可通过 `sudo apt-get install -y` 安装），以及当前服务器的 NVIDIA 驱动。
 
 先定义所有位置。以下 `/data/pirl` 是新服务器示例路径，按实际数据盘修改；不要将原服务器的 Python venv 原样复制后当作可移植环境。
 
 ```bash
 export PIRL_BASE=/data/pirl
 export PIRL_REPO="$PIRL_BASE/rlinf-pirl-official-30e0236"
+export PIRL_HARNESS_REPO="$PIRL_REPO"
+export PIRL_OFFICIAL="$PIRL_BASE/rlinf-official-source-30e0236"
 export PIRL_ENV="$PIRL_BASE/.envs/pirl-openpi-30e0236"
 export PIRL_ASSETS="$PIRL_BASE/LIBERO/libero/libero"
 export PIRL_SFT="$PIRL_BASE/ckpt/RLinf-Pi05-LIBERO-SFT"
 export PIRL_RUN="$PIRL_BASE/experiments/pi_rl/pi05-spatial-grpo-200step-$(date -u +%Y%m%dT%H%M%SZ)"
 export TMPDIR="$PIRL_BASE/tmp"
 export UV_CACHE_DIR="$PIRL_BASE/cache/uv"
+export UV_PYTHON_INSTALL_DIR="$PIRL_BASE/uv-python"
 export HF_HOME="$PIRL_BASE/cache/huggingface"
 export UV_LINK_MODE=copy
-mkdir -p "$TMPDIR" "$UV_CACHE_DIR" "$HF_HOME"
+mkdir -p "$TMPDIR" "$UV_CACHE_DIR" "$UV_PYTHON_INSTALL_DIR" "$HF_HOME"
 nvidia-smi
 df -h "$PIRL_BASE" /dev/shm
+python3 -m venv "$PIRL_BASE/.envs/bootstrap-tools"
+"$PIRL_BASE/.envs/bootstrap-tools/bin/python" -m pip install uv==0.11.14
+export PATH="$PIRL_BASE/.envs/bootstrap-tools/bin:$PATH"
+uv --version
 ```
 
-这些变量把下载、解压、编译和实验产物放在数据盘。先检查 GPU 占用和盘余量；原服务器曾因根分区 `/tmp` 满而安装失败。
+这些变量把下载、解压、编译和实验产物放在数据盘。`UV_PYTHON_INSTALL_DIR` 同样放在共享数据盘，确保 venv 的 Python 解释器软链接在 Volc 容器中也能解析；只共享 venv 目录而把解释器留在登录节点的 `/root/.local` 会启动失败。先检查 GPU 占用和盘余量；原服务器曾因根分区 `/tmp` 满而安装失败。
 
 新服务器可直接复制本次完整仓库（保留 `.git`），或先检出官方版本，再叠加本次迁移文件。下面在原服务器打包叠加层：
 
 ```bash
 cd /vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236
-tar -czf /vepfs-C区/jiajunlu/pi_rl-handoff-overlay.tar.gz \
+tar --exclude=__pycache__ --exclude='*.pyc' -czf /vepfs-C区/jiajunlu/pi_rl-handoff-overlay.tar.gz \
   scripts/pi_rl scripts/volc_empty_code \
   scripts/grpo_base_volc_queue2_20261019.yaml \
   tests/test_pi_rl_*.py docs/pi_rl \
@@ -76,12 +85,14 @@ tar -czf /vepfs-C区/jiajunlu/pi_rl-handoff-overlay.tar.gz \
 git clone https://github.com/RLinf/RLinf.git "$PIRL_REPO"
 git -C "$PIRL_REPO" checkout --detach 30e0236981c6a1dc19202de64116834c12673828
 tar -xzf /path/to/pi_rl-handoff-overlay.tar.gz -C "$PIRL_REPO"
-cd "$PIRL_REPO"
-git rev-parse HEAD
-git diff --exit-code HEAD
+git -C "$PIRL_REPO" worktree add --detach "$PIRL_OFFICIAL" \
+  30e0236981c6a1dc19202de64116834c12673828
+cd "$PIRL_HARNESS_REPO"
+git -C "$PIRL_OFFICIAL" rev-parse HEAD
+git -C "$PIRL_OFFICIAL" diff --exit-code HEAD
 ```
 
-`HEAD` 必须为上述完整 commit，官方受跟踪文件的 diff 必须为空。叠加的 `scripts/pi_rl`、测试和 Markdown 保持为未跟踪文件，这是本实验封装在固定官方基线上的布局。`prepare_training.py` 使用 `git archive HEAD` 冻结官方源码，另外复制 harness；若先提交叠加层导致 HEAD 改变，会触发版本门槛。需要将封装另行版本管理时，保留一份该官方 commit 的干净检出，使用 `--repo` 指向它。
+`PIRL_OFFICIAL` 的 `HEAD` 必须为上述完整 commit，官方受跟踪文件的 diff 必须为空。`PIRL_HARNESS_REPO` 保存可提交的封装和文档，独立 worktree 保存干净官方基线；`prepare_training.py` 从后者执行 `git archive HEAD`，另外复制 harness。这样提交封装不会改变数值源码的固定版本。当前服务器的干净官方检出已建立在 `/vepfs-C区/jiajunlu/rlinf-pirl-official-source-30e0236`。
 
 ## 3. 接入 LIBERO 仿真器和资产
 
@@ -128,7 +139,7 @@ PY
 python3 - <<'PY'
 import hashlib, json, os
 from pathlib import Path
-repo, assets = Path(os.environ['PIRL_REPO']), Path(os.environ['PIRL_ASSETS'])
+repo, assets = Path(os.environ['PIRL_HARNESS_REPO']), Path(os.environ['PIRL_ASSETS'])
 reference = json.loads((repo / 'docs/pi_rl/provenance/baseline/manifests/libero_assets.json').read_text())
 for entry in reference['files']:
     file = assets / entry['path']
@@ -145,29 +156,32 @@ PY
 为新服务器生成自己的目录、路径 manifest 和冻结评测脚本。新入口不复制历史通过状态，也不自动提交任务。
 
 ```bash
-cd "$PIRL_REPO"
+cd "$PIRL_HARNESS_REPO"
 python3 scripts/pi_rl/initialize_run.py \
-  --run "$PIRL_RUN" --repo "$PIRL_REPO" \
+  --run "$PIRL_RUN" --repo "$PIRL_OFFICIAL" \
   --environment "$PIRL_ENV" --sft "$PIRL_SFT" \
   --asset-root "$PIRL_ASSETS" --outer-steps 200 --save-interval 40
 source "$PIRL_RUN/runtime/run.env"
 export PYTHONDONTWRITEBYTECODE=1
 ```
 
-该命令要求 run 目录尚不存在，生成 `manifests/run.json`、`scripts/eval_snapshot/` 及其 SHA256、安装适配 diff、官方配置副本和 `runtime/run.env`。需要严格采用官方默认预算时，在初始化时指定 `--outer-steps 1000 --save-interval 40`。预算一经冻结，后续不原地改写。
+该命令要求 run 目录尚不存在；`source run.env` 后 `PIRL_REPO` 指向干净官方源码，`PIRL_HARNESS_REPO` 保持封装目录，后续 shell 工作目录仍为封装仓库。它生成 `manifests/run.json`、`scripts/eval_snapshot/` 及其 SHA256、安装适配 diff、官方配置副本和 `runtime/run.env`。需要严格采用官方默认预算时，在初始化时指定 `--outer-steps 1000 --save-interval 40`。预算一经冻结，后续不原地改写。
 
 训练节点需要系统 EGL/GLVND、GLFW、构建工具等依赖。对新服务器按固定仓库的系统依赖脚本安装一次，再使用已有库安装 venv：
 
 ```bash
-bash requirements/sys_deps.sh nvidia
-export UV_CONSTRAINT="$PIRL_REPO/docs/pi_rl/environment-constraints.txt"
-bash "$PIRL_RUN/runtime/install_reuse_assets.sh" embodied \
-  --model openpi --env libero --venv "$PIRL_ENV" \
-  --python 3.11.14 --torch 2.7.1 --no-root \
-  > "$PIRL_RUN/reports/environment-install.log" 2>&1
+bash "$PIRL_OFFICIAL/requirements/sys_deps.sh" nvidia
+export UV_CONSTRAINT="$PIRL_HARNESS_REPO/docs/pi_rl/environment-constraints.txt"
+(
+  cd "$PIRL_OFFICIAL"
+  bash "$PIRL_RUN/runtime/install_reuse_assets.sh" embodied \
+    --model openpi --env libero --venv "$PIRL_ENV" \
+    --python 3.11.14 --torch 2.7.1 --no-root \
+    > "$PIRL_RUN/reports/environment-install.log" 2>&1
+)
 ```
 
-系统脚本可能使用 sudo 并安装系统包；由服务器管理员在新机器/镜像中执行。系统库已经齐全的机器直接执行 venv 安装命令。适配脚本保留官方依赖安装，仅将 LIBERO 下载/全局配置重设替换为资产校验与私有配置，并保留共享全局 Git 镜像规则。原脚本与适配 diff 位于 `manifests/official_source.json`、`manifests/install_asset_reuse.patch`。
+在干净官方源码目录中执行安装器，确保 `--torch 2.7.1` 修改的临时 pyproject 与 uv 实际读取的是同一份。系统脚本可能使用 sudo 并安装系统包；由服务器管理员在新机器/镜像中执行。系统库已经齐全的机器直接执行 venv 安装命令。适配脚本保留官方依赖安装，仅将 LIBERO 下载/全局配置重设替换为资产校验与私有配置，并保留共享全局 Git 镜像规则。原脚本与适配 diff 位于 `manifests/official_source.json`、`manifests/install_asset_reuse.patch`。
 
 关键版本如下，完整历史依赖见 [pip_freeze.txt](pi_rl/provenance/baseline/manifests/pip_freeze.txt)。它是环境证据，两个 Transformers 发行包共用模块目录，不能把这份 freeze 当成可直接联合求解的锁文件。
 
@@ -184,9 +198,21 @@ bash "$PIRL_RUN/runtime/install_reuse_assets.sh" embodied \
 
 安装器必须完成最后的 Transformers 文件替换与 tokenizers 约束。历史顺序安装曾将 MuJoCo 升到 3.8.1，违反 LIBERO 的 `<3.4` 要求；本次约束文件在安装全过程固定 3.3.7 和 dm-control 1.0.34。若安装中断，先保留日志、完成或排查当前环境，不能仅看到 `pip freeze` 就进入训练。
 
-检查实际依赖和 CUDA：
+为固定其余传递依赖，安装完成后用[历史包版本重放清单](pi_rl/requirements-runtime-replay.txt)逐包恢复已记录版本，显式 `--no-deps` 避开两个 Transformers 发行包互斥的依赖元数据。重放命令还必须带 `--no-config`，防止封装仓库 `pyproject.toml` 的 Torch 2.11 / torchvision 0.26 overrides 覆盖这些精确版本。随后最后重装 fork、tokenizers，并恢复官方模型替换文件；顺序是运行环境契约的一部分。该重放只用于本次独立 venv，不用于共享环境。最后检查实际导入和 CUDA：
 
 ```bash
+uv --no-config pip install --python "$PIRL_ENV/bin/python" --no-deps \
+  -r "$PIRL_HARNESS_REPO/docs/pi_rl/requirements-runtime-replay.txt"
+uv --no-config pip install --python "$PIRL_ENV/bin/python" --no-deps --reinstall \
+  rlinf-transformer-openpi==4.53.2 tokenizers==0.21.4
+"$PIRL_ENV/bin/python" - <<'PY'
+from pathlib import Path
+import shutil, openpi, transformers
+source = Path(openpi.__file__).parent / 'models_pytorch/transformers_replace'
+target = Path(transformers.__file__).parent
+for file in source.rglob('*.py'):
+    shutil.copy2(file, target / file.relative_to(source))
+PY
 "$PIRL_ENV/bin/python" - <<'PY'
 import torch, transformers, mujoco, ray, tokenizers, flash_attn
 assert torch.cuda.is_available()
@@ -197,6 +223,7 @@ assert ray.__version__ == '2.59.0'
 assert tokenizers.__version__ == '0.21.4'
 print(torch.__version__, torch.version.cuda, transformers.__file__)
 PY
+readlink -f "$PIRL_ENV/bin/python"
 uv pip freeze --python "$PIRL_ENV/bin/python" > "$PIRL_RUN/manifests/pip_freeze.txt"
 ```
 
@@ -320,6 +347,7 @@ smoke 为每协议 10 条，full 为每协议 500 条。输出在 `eval/sft/{smo
 一个外层 RL step 包含 `64×8=512` 个原始轨迹配额、`512×(240/5)=24576` 个 chunk 训练位置，按 global batch 2048 推导每个 actor 12 次 optimizer update。过滤通过 mask 控制有效 loss，512 不是筛选后固定有效轨迹数。历史训练的可训练参数精确值为 430,098,464。
 
 ```bash
+"$PIRL_ENV/bin/python" -m pytest tests/test_pi_rl_*.py -q
 "$PIRL_ENV/bin/python" scripts/pi_rl/audit_config.py --run "$PIRL_RUN"
 "$PIRL_ENV/bin/python" scripts/pi_rl/audit_actor_model.py --run "$PIRL_RUN"
 "$PIRL_ENV/bin/python" scripts/pi_rl/prepare_training.py --run "$PIRL_RUN"
@@ -428,6 +456,7 @@ CUDA_VISIBLE_DEVICES=0,1 "$PIRL_ENV/bin/python" "$HARNESS/run_final_evaluation.p
 | Ray Unix socket 非 ASCII / 路径过长 | 使用 launcher 创建的短 ASCII runtime，不手改共享 Ray 或 `/vgrpo` |
 | Ray 观测 JSONL 缺失 | 检查 `RLINF_EXT_MODULE=training_observer`、冻结 harness PYTHONPATH；driver 中注册不会自动传播到 worker |
 | TensorBoard validation 找不到 | 指标在 `runner.logger.log_path/tensorboard`，checkpoint 在 `log_path/experiment_name/checkpoints` |
+| 重放提示 torchvision 0.26 / 0.22 冲突 | 重放使用 `uv --no-config pip install`；官方安装器在 `PIRL_OFFICIAL` 目录执行 |
 | MuJoCo 版本超出范围 | 在安装前应用随附 constraints；保留联合解析/安装日志，不在共享环境升级依赖 |
 | Transformers 导入 tokenizers 错误 | 核对 fork 4.53.2、tokenizers 0.21.4、官方替换文件 hash；完成安装器末尾步骤 |
 | `--run` 被 torchrun 误解析 | 使用封装自带的 `--` 分隔方式，不改写 collective 命令 |

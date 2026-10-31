@@ -5,136 +5,216 @@
   "copied_files": [
     {
       "path": "scripts/pi_rl/accept_sft.py",
-      "source_sha256": "1bcdc98da9d33039cb8d46f35a880173155508939e9e9bcc1f2afaa614b8862e"
+      "source_sha256": "1bcdc98da9d33039cb8d46f35a880173155508939e9e9bcc1f2afaa614b8862e",
+      "destination_sha256": "01b5e87a96096630fe5f41deb0271ddfa3e056a32f0174253a96802897fa89bd",
+      "adapted": true
     },
     {
       "path": "scripts/pi_rl/assess_eval_readiness.py",
-      "source_sha256": "2989779563136dd19b4759f9d612d40a1b31f73a1289b3dab3215bee4fe5f6f6"
+      "source_sha256": "2989779563136dd19b4759f9d612d40a1b31f73a1289b3dab3215bee4fe5f6f6",
+      "destination_sha256": "2989779563136dd19b4759f9d612d40a1b31f73a1289b3dab3215bee4fe5f6f6",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/audit_actor_model.py",
-      "source_sha256": "3cad708751766877ffc696493563257607e8e381d900f8764e1518612229d91d"
+      "source_sha256": "3cad708751766877ffc696493563257607e8e381d900f8764e1518612229d91d",
+      "destination_sha256": "3cad708751766877ffc696493563257607e8e381d900f8764e1518612229d91d",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/audit_config.py",
-      "source_sha256": "dad4b215a33c28eda837f62a3bcdde6af0528be79533c84a421d6eabfbd84e4e"
+      "source_sha256": "dad4b215a33c28eda837f62a3bcdde6af0528be79533c84a421d6eabfbd84e4e",
+      "destination_sha256": "dad4b215a33c28eda837f62a3bcdde6af0528be79533c84a421d6eabfbd84e4e",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/calibrate_openpi.py",
-      "source_sha256": "93baa4b375397870012aad4f2d7ff54cc58e289aaa7b172632ee676c701939fa"
+      "source_sha256": "93baa4b375397870012aad4f2d7ff54cc58e289aaa7b172632ee676c701939fa",
+      "destination_sha256": "93baa4b375397870012aad4f2d7ff54cc58e289aaa7b172632ee676c701939fa",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/compare_results.py",
-      "source_sha256": "a75239236318a6dc3dd5b2d90ba7a74da43e57eac8974f263b0d2927025f0f30"
+      "source_sha256": "a75239236318a6dc3dd5b2d90ba7a74da43e57eac8974f263b0d2927025f0f30",
+      "destination_sha256": "565fec696f4c321e143d8dab8f561e7ff7929a1054d009f2d57c41cc7c5865eb",
+      "adapted": true
     },
     {
       "path": "scripts/pi_rl/continue_after_sft.py",
-      "source_sha256": "60d96d548e2327217b92d12b10dbff8d3e83c0aa3d0a5549ed1c015c5850c49b"
+      "source_sha256": "60d96d548e2327217b92d12b10dbff8d3e83c0aa3d0a5549ed1c015c5850c49b",
+      "destination_sha256": "60d96d548e2327217b92d12b10dbff8d3e83c0aa3d0a5549ed1c015c5850c49b",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/evaluate_spatial.py",
-      "source_sha256": "b03b010e070c855e86cbd2e3b08e3cd4e1facb27419674dcf303caa0d1beed55"
+      "source_sha256": "b03b010e070c855e86cbd2e3b08e3cd4e1facb27419674dcf303caa0d1beed55",
+      "destination_sha256": "b03b010e070c855e86cbd2e3b08e3cd4e1facb27419674dcf303caa0d1beed55",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/gpu_collective_probe.py",
-      "source_sha256": "3561110c4c691310d7c9dd1ba37263c57c555641e1bb8405e8b5c9d8cc1ea38d"
+      "source_sha256": "3561110c4c691310d7c9dd1ba37263c57c555641e1bb8405e8b5c9d8cc1ea38d",
+      "destination_sha256": "3561110c4c691310d7c9dd1ba37263c57c555641e1bb8405e8b5c9d8cc1ea38d",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/launch_training.py",
-      "source_sha256": "7e99e2428b50de226c8e4384a39c9afd762ac2dd54ab4c0d1c9ca768bfec23cf"
+      "source_sha256": "7e99e2428b50de226c8e4384a39c9afd762ac2dd54ab4c0d1c9ca768bfec23cf",
+      "destination_sha256": "b652f68b98ce427fcf0cea5bcee1f392719c51a4a710b097410ca9098e543751",
+      "adapted": true
     },
     {
       "path": "scripts/pi_rl/prepare_run.py",
-      "source_sha256": "2693dbe9f120f9bb05f4894437020858ebf3c9419ae7e8737b064c9bf7ab709d"
+      "source_sha256": "2693dbe9f120f9bb05f4894437020858ebf3c9419ae7e8737b064c9bf7ab709d",
+      "destination_sha256": "9c7dfa68a81760bcdd54f62d14499a3339404ba7b5bb658898f847108e660a9d",
+      "adapted": true
     },
     {
       "path": "scripts/pi_rl/prepare_training.py",
-      "source_sha256": "037c3f4e2099bf3f8f8db822fe41e1ac4a6c01118b37c6b4bc0f15e045a35780"
+      "source_sha256": "037c3f4e2099bf3f8f8db822fe41e1ac4a6c01118b37c6b4bc0f15e045a35780",
+      "destination_sha256": "72c1a810eea281e555cbcd025d5425c5a961f84c6070f7c9e30f1c166f334b1d",
+      "adapted": true
     },
     {
       "path": "scripts/pi_rl/probe_observer.py",
-      "source_sha256": "9681497c9ee729eefef921e5ebc5c82756bdee687c8a0a66eed4f023a42b980c"
+      "source_sha256": "9681497c9ee729eefef921e5ebc5c82756bdee687c8a0a66eed4f023a42b980c",
+      "destination_sha256": "9681497c9ee729eefef921e5ebc5c82756bdee687c8a0a66eed4f023a42b980c",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/probe_runtime.py",
-      "source_sha256": "d2b60df969f3c86541ffb29e923fb4f0dbe2227efef7fe743cb9e5b998561858"
+      "source_sha256": "d2b60df969f3c86541ffb29e923fb4f0dbe2227efef7fe743cb9e5b998561858",
+      "destination_sha256": "d2b60df969f3c86541ffb29e923fb4f0dbe2227efef7fe743cb9e5b998561858",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/run_evaluation.py",
-      "source_sha256": "264aa365eb55bfca738542e048a7fa67f8b4a7bbcf638fdf7d5b65cc36d82e2d"
+      "source_sha256": "264aa365eb55bfca738542e048a7fa67f8b4a7bbcf638fdf7d5b65cc36d82e2d",
+      "destination_sha256": "264aa365eb55bfca738542e048a7fa67f8b4a7bbcf638fdf7d5b65cc36d82e2d",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/run_final_evaluation.py",
-      "source_sha256": "15fc379e8edb7570f3143de871e6aea9c3aca2c7a1cc0a0dafcaf5a34cfdbfb2"
+      "source_sha256": "15fc379e8edb7570f3143de871e6aea9c3aca2c7a1cc0a0dafcaf5a34cfdbfb2",
+      "destination_sha256": "b940be05928437f94733d85cf858efd3e472e0cbd9cc403cd8d703775cdea3db",
+      "adapted": true
     },
     {
       "path": "scripts/pi_rl/run_official_training.py",
-      "source_sha256": "0741008412a130d1857c04690ba6a1c49446e4110ccf2b55352b66f0f5926ab9"
+      "source_sha256": "0741008412a130d1857c04690ba6a1c49446e4110ccf2b55352b66f0f5926ab9",
+      "destination_sha256": "0741008412a130d1857c04690ba6a1c49446e4110ccf2b55352b66f0f5926ab9",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/runtime.py",
-      "source_sha256": "50d1990758633cfd4682db11040582f8008174bdecc2a5215f1ed610c82a8ca3"
+      "source_sha256": "50d1990758633cfd4682db11040582f8008174bdecc2a5215f1ed610c82a8ca3",
+      "destination_sha256": "c3e621ba2686daaebb4edb593c8dc5bc649390696b42f038fa25e16fbc28d359",
+      "adapted": true
     },
     {
       "path": "scripts/pi_rl/submit_training.py",
-      "source_sha256": "42c5a23b916bd3646557526176668ae2b042e0a4947a17858a67b2824d10f1a4"
+      "source_sha256": "42c5a23b916bd3646557526176668ae2b042e0a4947a17858a67b2824d10f1a4",
+      "destination_sha256": "42c5a23b916bd3646557526176668ae2b042e0a4947a17858a67b2824d10f1a4",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/summarize_eval.py",
-      "source_sha256": "4337afe69fb40203f248d3649ffdd2ef22feb48fd37232ba687992379cc561d1"
+      "source_sha256": "4337afe69fb40203f248d3649ffdd2ef22feb48fd37232ba687992379cc561d1",
+      "destination_sha256": "4337afe69fb40203f248d3649ffdd2ef22feb48fd37232ba687992379cc561d1",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/training_observer.py",
-      "source_sha256": "e7ebc2adf2c37b0c8d733a194c09a7aa1e08ef0b046da89d1abac2e843efb9fe"
+      "source_sha256": "e7ebc2adf2c37b0c8d733a194c09a7aa1e08ef0b046da89d1abac2e843efb9fe",
+      "destination_sha256": "e7ebc2adf2c37b0c8d733a194c09a7aa1e08ef0b046da89d1abac2e843efb9fe",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/training_policy.py",
-      "source_sha256": "dc02acdcf4db073a43bc821f47c078706791af3689340af5e8a01101da56a1c5"
+      "source_sha256": "dc02acdcf4db073a43bc821f47c078706791af3689340af5e8a01101da56a1c5",
+      "destination_sha256": "dc02acdcf4db073a43bc821f47c078706791af3689340af5e8a01101da56a1c5",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/verify_serial_schedule.py",
-      "source_sha256": "9c83870dfb1ca5019cde1102c97fe31297a48957fbdc9e4fd98149d2253b7fa8"
+      "source_sha256": "9c83870dfb1ca5019cde1102c97fe31297a48957fbdc9e4fd98149d2253b7fa8",
+      "destination_sha256": "9c83870dfb1ca5019cde1102c97fe31297a48957fbdc9e4fd98149d2253b7fa8",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/verify_sharding.py",
-      "source_sha256": "de046a219bffcded34e182548af7c5d0477b7d7fb5415272cd7e176cf911dd2b"
+      "source_sha256": "de046a219bffcded34e182548af7c5d0477b7d7fb5415272cd7e176cf911dd2b",
+      "destination_sha256": "de046a219bffcded34e182548af7c5d0477b7d7fb5415272cd7e176cf911dd2b",
+      "adapted": false
     },
     {
       "path": "scripts/pi_rl/verify_training.py",
-      "source_sha256": "3f61a753d0d78859e7e45b762ab5865fba170f52fa8c53551b2b895255ad0eb7"
+      "source_sha256": "3f61a753d0d78859e7e45b762ab5865fba170f52fa8c53551b2b895255ad0eb7",
+      "destination_sha256": "3f61a753d0d78859e7e45b762ab5865fba170f52fa8c53551b2b895255ad0eb7",
+      "adapted": false
     },
     {
       "path": "tests/test_pi_rl_comparison.py",
-      "source_sha256": "f86a826cfa08e94640da04d2229344d66d5298f1fcbb45e136dcf9d34c6aa773"
+      "source_sha256": "f86a826cfa08e94640da04d2229344d66d5298f1fcbb45e136dcf9d34c6aa773",
+      "destination_sha256": "2ee342f5a3b0cb7346a13a373e1b83f94bbab6a4dc0c27a2727fc231d6f1496e",
+      "adapted": true
     },
     {
       "path": "tests/test_pi_rl_config_audit.py",
-      "source_sha256": "1d52c874cc5407c015121642004d8ef6964d40e195a4e8c3fbfcbb50508216f7"
+      "source_sha256": "1d52c874cc5407c015121642004d8ef6964d40e195a4e8c3fbfcbb50508216f7",
+      "destination_sha256": "1d52c874cc5407c015121642004d8ef6964d40e195a4e8c3fbfcbb50508216f7",
+      "adapted": false
     },
     {
       "path": "tests/test_pi_rl_eval_summary.py",
-      "source_sha256": "f970e039bb99b312739b9cd6970571a8f76cc140eb485c9930e198b3d249e771"
+      "source_sha256": "f970e039bb99b312739b9cd6970571a8f76cc140eb485c9930e198b3d249e771",
+      "destination_sha256": "f970e039bb99b312739b9cd6970571a8f76cc140eb485c9930e198b3d249e771",
+      "adapted": false
     },
     {
       "path": "tests/test_pi_rl_training.py",
-      "source_sha256": "e21c4316cbd8ec8bc1c1c16e69ef82fd83098beac3cbcf31375bc21bcfdb40c4"
+      "source_sha256": "e21c4316cbd8ec8bc1c1c16e69ef82fd83098beac3cbcf31375bc21bcfdb40c4",
+      "destination_sha256": "e21c4316cbd8ec8bc1c1c16e69ef82fd83098beac3cbcf31375bc21bcfdb40c4",
+      "adapted": false
     },
     {
       "path": "docs/manifold/pi_rl/PI05_SPATIAL_GRPO_REPRODUCTION_PLAN_20261025.md",
-      "source_sha256": "5142d03825a9257c5936ecd1d4cdf29cdf8eedd03ae6c7c622c132bc6f38c3f6"
+      "source_sha256": "5142d03825a9257c5936ecd1d4cdf29cdf8eedd03ae6c7c622c132bc6f38c3f6",
+      "destination_sha256": "1f4c10dccc3581c13b01771f912d1d6c23b5585090409707e27c8bbc29360f91",
+      "adapted": true
     },
     {
       "path": "docs/GRPO_BASE_VOLC_QUEUE2_HANDOFF_20261019.md",
-      "source_sha256": "0525dce2f55e2b8db8abb75cc4b67f37daf61f7cf241220ab81fa352df146eea"
+      "source_sha256": "0525dce2f55e2b8db8abb75cc4b67f37daf61f7cf241220ab81fa352df146eea",
+      "destination_sha256": "0525dce2f55e2b8db8abb75cc4b67f37daf61f7cf241220ab81fa352df146eea",
+      "adapted": false
     },
     {
       "path": "scripts/grpo_base_volc_queue2_20261019.yaml",
-      "source_sha256": "6787e25047156b59fb90f31330dce699b483fc648ae7775cec50a513528f59cc"
+      "source_sha256": "6787e25047156b59fb90f31330dce699b483fc648ae7775cec50a513528f59cc",
+      "destination_sha256": "6787e25047156b59fb90f31330dce699b483fc648ae7775cec50a513528f59cc",
+      "adapted": false
     },
     {
       "path": "scripts/volc_empty_code/README.txt",
-      "source_sha256": "96549c9a502685605a5bb4d6abe12013ba3b2150e6616ac4992eacb44328ccfc"
+      "source_sha256": "96549c9a502685605a5bb4d6abe12013ba3b2150e6616ac4992eacb44328ccfc",
+      "destination_sha256": "96549c9a502685605a5bb4d6abe12013ba3b2150e6616ac4992eacb44328ccfc",
+      "adapted": false
     }
   ],
-  "scope": "Working-tree Python sources including uncommitted changes; caches excluded. Original bytes retained under provenance/original_scripts. Historical evidence is reference only, never new-server admission."
+  "scope": "Working-tree sources including uncommitted changes; caches excluded. All 25 original scripts retained byte-for-byte under provenance/original_scripts. Historical reports are reference only and never new-server admission. Current harness and docs may be versioned separately from the clean official source.",
+  "adaptations": {
+    "prepare_run.py": "Resolve simulator asset root from run manifest; export private OpenPI cache.",
+    "accept_sft.py": "Verify input assets at the run-specific root.",
+    "runtime.py": "Use shared run tokenizer cache, including evaluation views.",
+    "launch_training.py": "Propagate private tokenizer cache to all training ranks.",
+    "prepare_training.py": "Read optional account-specific Volc placement from the run manifest.",
+    "run_final_evaluation.py": "Select final checkpoint from the frozen positive outer-step budget, including 200.",
+    "compare_results.py": "Record the actual frozen budget rather than labeling every run as 1000.",
+    "initialize_run.py": "New initializer with explicit source/env/model/assets/budget/Volc placement; metadata belongs to harness checkout.",
+    "tests/test_pi_rl_comparison.py": "Verify final selection against both 200 and 1000 frozen budgets; reject mismatched checkpoints."
+  },
+  "clean_official_source_checkout": "/vepfs-C区/jiajunlu/rlinf-pirl-official-source-30e0236",
+  "official_source_tree_unchanged": true,
+  "runtime_replay_scope": "Exact recorded package list, applied with --no-deps after the official installer; restore fork/replacements last. Dry-run is separate from clean-server installation verification."
 }

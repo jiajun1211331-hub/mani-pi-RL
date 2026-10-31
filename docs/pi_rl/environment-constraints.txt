@@ -1,0 +1,13 @@
+# Tested NVIDIA / Python 3.11 runtime. Apply during the upstream installer.
+torch==2.7.1
+torchvision==0.22.1
+rlinf-openpi==0.1.1
+rlinf-libero==0.1.3
+rlinf-transformer-openpi==4.53.2
+mujoco==3.3.7
+dm-control==1.0.34
+numpy==1.26.4
+ray==2.59.0
+jax==0.5.3
+jaxlib==0.5.3
+orbax-checkpoint==0.11.13

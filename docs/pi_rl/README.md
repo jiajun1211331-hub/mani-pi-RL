@@ -5,6 +5,7 @@
 | 资料 | 用途 |
 |---|---|
 | [迁移清单](COPY_MANIFEST.json) | 源工作树文件、原始 SHA256、迁移后 SHA256 与适配说明 |
+| [完整运行包重放](requirements-runtime-replay.txt) | 安装后按历史精确版本重放依赖，最后恢复 Transformers fork/替换文件 |
 | [环境约束](environment-constraints.txt) | 固定 NVIDIA / Python 3.11 安装的关键版本 |
 | [原始脚本](provenance/original_scripts) | 当前 SimpleVLA 工作树中 25 个脚本的原样副本 |
 | [SFT 基线证据](provenance/baseline) | 两协议各 500 条原始记录、验收、环境和资产 hash |
