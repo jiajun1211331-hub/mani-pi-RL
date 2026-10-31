@@ -1,0 +1,271 @@
+{
+  "passed": true,
+  "status": "passed",
+  "official_commit": "30e0236981c6a1dc19202de64116834c12673828",
+  "sft_revision": "45ccfcc4e28634f1576ebf78cab0fbe2fd82432d",
+  "checkpoint_sha256": "4616e4c1966a5fb063b442ea5d69857f45e873222d839b794634d87d252ab9e7",
+  "wrapper_sha256": "b15ff19669dd871eb0cec616c5f2904c938d4a8e33368a8233bc394c33a89df5",
+  "hard_failures": [],
+  "pending": [],
+  "metric_discrepancies": [],
+  "results": {
+    "recipe-240": {
+      "complete": true,
+      "protocol": "recipe-240",
+      "seed": 0,
+      "expected_n": 500,
+      "n": 500,
+      "successes": 428,
+      "success_rate": 0.856,
+      "wilson95": [
+        0.8225095437017246,
+        0.8840619258896502
+      ],
+      "difference_from_paper_sft_pp": 1.0000000000000009,
+      "missing_episodes": [],
+      "system_error_count": 0,
+      "per_task": [
+        {
+          "task_id": 0,
+          "n": 50,
+          "successes": 50,
+          "success_rate": 1.0,
+          "wilson95": [
+            0.9286524008666414,
+            1.0
+          ]
+        },
+        {
+          "task_id": 1,
+          "n": 50,
+          "successes": 49,
+          "success_rate": 0.98,
+          "wilson95": [
+            0.8950455641036219,
+            0.9964607407283539
+          ]
+        },
+        {
+          "task_id": 2,
+          "n": 50,
+          "successes": 49,
+          "success_rate": 0.98,
+          "wilson95": [
+            0.8950455641036219,
+            0.9964607407283539
+          ]
+        },
+        {
+          "task_id": 3,
+          "n": 50,
+          "successes": 44,
+          "success_rate": 0.88,
+          "wilson95": [
+            0.7619518261679701,
+            0.9438239984906773
+          ]
+        },
+        {
+          "task_id": 4,
+          "n": 50,
+          "successes": 48,
+          "success_rate": 0.96,
+          "wilson95": [
+            0.8653990931249297,
+            0.9889611156723802
+          ]
+        },
+        {
+          "task_id": 5,
+          "n": 50,
+          "successes": 46,
+          "success_rate": 0.92,
+          "wilson95": [
+            0.8116175308165717,
+            0.968450485911407
+          ]
+        },
+        {
+          "task_id": 6,
+          "n": 50,
+          "successes": 31,
+          "success_rate": 0.62,
+          "wilson95": [
+            0.4815044693099298,
+            0.7413721068980641
+          ]
+        },
+        {
+          "task_id": 7,
+          "n": 50,
+          "successes": 50,
+          "success_rate": 1.0,
+          "wilson95": [
+            0.9286524008666414,
+            1.0
+          ]
+        },
+        {
+          "task_id": 8,
+          "n": 50,
+          "successes": 48,
+          "success_rate": 0.96,
+          "wilson95": [
+            0.8653990931249297,
+            0.9889611156723802
+          ]
+        },
+        {
+          "task_id": 9,
+          "n": 50,
+          "successes": 13,
+          "success_rate": 0.26,
+          "wilson95": [
+            0.15871527493552393,
+            0.39553157264848837
+          ]
+        }
+      ],
+      "checkpoint_sha256": "4616e4c1966a5fb063b442ea5d69857f45e873222d839b794634d87d252ab9e7",
+      "wrapper_sha256": "b15ff19669dd871eb0cec616c5f2904c938d4a8e33368a8233bc394c33a89df5",
+      "source_episode_files": [
+        "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/recipe-240/episodes_gpu0.jsonl",
+        "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/recipe-240/episodes_gpu1.jsonl"
+      ],
+      "source_episode_sha256": {
+        "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/recipe-240/episodes_gpu0.jsonl": "8d28376c8fe18d1eff85027f0a3ecfa07589aa9d931588a9f80a92ef1351d68b",
+        "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/recipe-240/episodes_gpu1.jsonl": "68d759a46c3135735b1a897d4f000c66fe33aa3b7951f3cfbae951cfee241c97"
+      }
+    },
+    "standalone-220": {
+      "complete": true,
+      "protocol": "standalone-220",
+      "seed": 7,
+      "expected_n": 500,
+      "n": 500,
+      "successes": 421,
+      "success_rate": 0.842,
+      "wilson95": [
+        0.8074376489887337,
+        0.8713473021355645
+      ],
+      "difference_from_paper_sft_pp": -0.40000000000000036,
+      "missing_episodes": [],
+      "system_error_count": 0,
+      "per_task": [
+        {
+          "task_id": 0,
+          "n": 50,
+          "successes": 47,
+          "success_rate": 0.94,
+          "wilson95": [
+            0.8378290831116182,
+            0.979385029651026
+          ]
+        },
+        {
+          "task_id": 1,
+          "n": 50,
+          "successes": 47,
+          "success_rate": 0.94,
+          "wilson95": [
+            0.8378290831116182,
+            0.979385029651026
+          ]
+        },
+        {
+          "task_id": 2,
+          "n": 50,
+          "successes": 50,
+          "success_rate": 1.0,
+          "wilson95": [
+            0.9286524008666414,
+            1.0
+          ]
+        },
+        {
+          "task_id": 3,
+          "n": 50,
+          "successes": 38,
+          "success_rate": 0.76,
+          "wilson95": [
+            0.6258731624205708,
+            0.8570260860300828
+          ]
+        },
+        {
+          "task_id": 4,
+          "n": 50,
+          "successes": 45,
+          "success_rate": 0.9,
+          "wilson95": [
+            0.7863976856252035,
+            0.9565242350681096
+          ]
+        },
+        {
+          "task_id": 5,
+          "n": 50,
+          "successes": 48,
+          "success_rate": 0.96,
+          "wilson95": [
+            0.8653990931249297,
+            0.9889611156723802
+          ]
+        },
+        {
+          "task_id": 6,
+          "n": 50,
+          "successes": 34,
+          "success_rate": 0.68,
+          "wilson95": [
+            0.5418970269185592,
+            0.7924178373934316
+          ]
+        },
+        {
+          "task_id": 7,
+          "n": 50,
+          "successes": 47,
+          "success_rate": 0.94,
+          "wilson95": [
+            0.8378290831116182,
+            0.979385029651026
+          ]
+        },
+        {
+          "task_id": 8,
+          "n": 50,
+          "successes": 49,
+          "success_rate": 0.98,
+          "wilson95": [
+            0.8950455641036219,
+            0.9964607407283539
+          ]
+        },
+        {
+          "task_id": 9,
+          "n": 50,
+          "successes": 16,
+          "success_rate": 0.32,
+          "wilson95": [
+            0.20758216260656845,
+            0.45810297308144077
+          ]
+        }
+      ],
+      "checkpoint_sha256": "4616e4c1966a5fb063b442ea5d69857f45e873222d839b794634d87d252ab9e7",
+      "wrapper_sha256": "b15ff19669dd871eb0cec616c5f2904c938d4a8e33368a8233bc394c33a89df5",
+      "source_episode_files": [
+        "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/standalone-220/episodes_gpu0.jsonl",
+        "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/standalone-220/episodes_gpu1.jsonl"
+      ],
+      "source_episode_sha256": {
+        "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/standalone-220/episodes_gpu0.jsonl": "12343a1561a09f9eee13cb5dd7cd24058a3db4378723ac3aaacc5ccf383649f3",
+        "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/standalone-220/episodes_gpu1.jsonl": "dd05363788ee39a61756092c2dc1c9953eac93094089a8b8b6feed388f33ee17"
+      }
+    }
+  },
+  "legacy_production_action_equality": false,
+  "scope": "Current-official-native SFT baseline acceptance. Wilson intervals do not establish full paper software equivalence. Any >3pp difference triggers diagnosis rather than automatic tolerance relaxation."
+}

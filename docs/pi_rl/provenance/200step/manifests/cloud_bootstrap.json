@@ -1,0 +1,36 @@
+{
+  "entrypoint": "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-200step-save40-30e0236-20261029T083915Z/runtime/cloud_entry.sh",
+  "entrypoint_sha256": "516b5466e315a81b138636b291a0764663bfeaa231cde77a90f7368aac179a8d",
+  "egl_source": "/vepfs-C区/jiajunlu/WAM-RL/work_dirs/volc/simplevla_manifold/task3_fresh50_libero10_traj1_postrl_available_20261018T085400Z_eglfix/runtime/egl",
+  "egl_files": {
+    "runtime/egl/libEGL.so.0": {
+      "symlink": "libEGL.so.1"
+    },
+    "runtime/egl/libEGL.so.1": {
+      "sha256": "69816a7062d7d624144472f5ef71f5b23732b9003df7472662920602e62805db",
+      "bytes": 72352
+    },
+    "runtime/egl/libGLdispatch.so": {
+      "symlink": "libGLdispatch.so.0"
+    },
+    "runtime/egl/libOpenGL.so": {
+      "symlink": "libOpenGL.so.0"
+    },
+    "runtime/egl/libOpenGL.so.0": {
+      "sha256": "35ea98e979c5bcadf06a79b8ca5a767a197c77bc77428a9a8a16b95bf78e99e9",
+      "bytes": 174408
+    },
+    "runtime/egl/libEGL.so": {
+      "symlink": "libEGL.so.1"
+    },
+    "runtime/egl/libGLdispatch.so.0": {
+      "sha256": "a4f2642498fba54d2f39e90ca3daa94340cdd52198473185a5285608ae318cb6",
+      "bytes": 715200
+    },
+    "runtime/egl/egl_vendor.d/10_nvidia.json": {
+      "sha256": "902ce1a29e2e84fbf7b38168bf953ad42b689f2d46510fd07a54e4a18cb5ad1c",
+      "bytes": 79
+    }
+  },
+  "scope": "Private copies of the GLVND loader and NVIDIA vendor registration already used with this identical Volc image. NVIDIA driver libraries remain provided by the allocated host. No model/environment numerical source changes."
+}

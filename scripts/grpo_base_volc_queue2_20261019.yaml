@@ -1,0 +1,26 @@
+TaskName: libero10-grpo-base-seed7-q2-20261019t130046z-r2
+Description: Pure SimpleVLA GRPO baseline; LIBERO10 SFT traj1; seed7; accepted64x8;
+  cross-epoch accumulation; 300 updates; save40; no manifold/KL/entropy/RM/validation;
+  queue2.
+Entrypoint: 'bash -lc ''export RUN_ROOT=''"''"''/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/train/grpo_base/libero10-grpo-base-seed7-q2-20261019T130046Z-r2''"''"''
+
+  exec bash ''"''"''/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/train/grpo_base/libero10-grpo-base-seed7-q2-20261019T130046Z-r2/source_snapshot/scripts/run_grpo_base_volc.sh''"''"'''''
+Framework: PyTorchDDP
+ResourceQueueID: q-20260403140809-n4flj
+UserCodePath: scripts/volc_empty_code
+Envs:
+- Name: NVIDIA_DRIVER_CAPABILITIES
+  Value: compute,utility,graphics
+  IsPrivate: false
+TaskRoleSpecs:
+- RoleName: worker
+  RoleReplicas: 1
+  Flavor: ml.hpcpni2l.28xlarge
+ImageUrl: vemlp-cn-beijing.cr.volces.com/preset-images/pytorch:2.10.0-cu12.9.1-py3.13-ubuntu24.04
+Storages:
+- Type: Vepfs
+  MountPath: /vepfs-C区
+  ReadOnly: false
+  SubPath: ''
+  VepfsId: vepfs-cnbjba6dad11eac7
+AccessType: Private

@@ -1,0 +1,124 @@
+{
+  "complete": true,
+  "protocol": "recipe-240",
+  "seed": 0,
+  "expected_n": 500,
+  "n": 500,
+  "successes": 428,
+  "success_rate": 0.856,
+  "wilson95": [
+    0.8225095437017246,
+    0.8840619258896502
+  ],
+  "difference_from_paper_sft_pp": 1.0000000000000009,
+  "missing_episodes": [],
+  "system_error_count": 0,
+  "per_task": [
+    {
+      "task_id": 0,
+      "n": 50,
+      "successes": 50,
+      "success_rate": 1.0,
+      "wilson95": [
+        0.9286524008666414,
+        1.0
+      ]
+    },
+    {
+      "task_id": 1,
+      "n": 50,
+      "successes": 49,
+      "success_rate": 0.98,
+      "wilson95": [
+        0.8950455641036219,
+        0.9964607407283539
+      ]
+    },
+    {
+      "task_id": 2,
+      "n": 50,
+      "successes": 49,
+      "success_rate": 0.98,
+      "wilson95": [
+        0.8950455641036219,
+        0.9964607407283539
+      ]
+    },
+    {
+      "task_id": 3,
+      "n": 50,
+      "successes": 44,
+      "success_rate": 0.88,
+      "wilson95": [
+        0.7619518261679701,
+        0.9438239984906773
+      ]
+    },
+    {
+      "task_id": 4,
+      "n": 50,
+      "successes": 48,
+      "success_rate": 0.96,
+      "wilson95": [
+        0.8653990931249297,
+        0.9889611156723802
+      ]
+    },
+    {
+      "task_id": 5,
+      "n": 50,
+      "successes": 46,
+      "success_rate": 0.92,
+      "wilson95": [
+        0.8116175308165717,
+        0.968450485911407
+      ]
+    },
+    {
+      "task_id": 6,
+      "n": 50,
+      "successes": 31,
+      "success_rate": 0.62,
+      "wilson95": [
+        0.4815044693099298,
+        0.7413721068980641
+      ]
+    },
+    {
+      "task_id": 7,
+      "n": 50,
+      "successes": 50,
+      "success_rate": 1.0,
+      "wilson95": [
+        0.9286524008666414,
+        1.0
+      ]
+    },
+    {
+      "task_id": 8,
+      "n": 50,
+      "successes": 48,
+      "success_rate": 0.96,
+      "wilson95": [
+        0.8653990931249297,
+        0.9889611156723802
+      ]
+    },
+    {
+      "task_id": 9,
+      "n": 50,
+      "successes": 13,
+      "success_rate": 0.26,
+      "wilson95": [
+        0.15871527493552393,
+        0.39553157264848837
+      ]
+    }
+  ],
+  "checkpoint_sha256": "4616e4c1966a5fb063b442ea5d69857f45e873222d839b794634d87d252ab9e7",
+  "wrapper_sha256": "b15ff19669dd871eb0cec616c5f2904c938d4a8e33368a8233bc394c33a89df5",
+  "source_episode_files": [
+    "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/recipe-240/episodes_gpu0.jsonl",
+    "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-official-30e0236-20261025T144123Z/eval/sft/full/recipe-240/episodes_gpu1.jsonl"
+  ]
+}

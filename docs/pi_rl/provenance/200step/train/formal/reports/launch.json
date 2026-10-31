@@ -1,0 +1,36 @@
+{
+  "phase": "formal",
+  "command": [
+    "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/bin/python",
+    "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-200step-save40-30e0236-20261029T083915Z/source_snapshot/harness/run_official_training.py",
+    "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-200step-save40-30e0236-20261029T083915Z/source_snapshot/official/examples/embodiment/train_embodied_agent.py",
+    "--config-path",
+    "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-200step-save40-30e0236-20261029T083915Z/configs",
+    "--config-name",
+    "formal",
+    "hydra.run.dir=\"/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-200step-save40-30e0236-20261029T083915Z/train/formal/runtime/work\"",
+    "hydra.output_subdir=null",
+    "hydra.job.chdir=false"
+  ],
+  "cwd": "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-200step-save40-30e0236-20261029T083915Z/source_snapshot/official",
+  "source_tree_sha256": "d81aaca7164d0cb358af6c898dee128b61af33657b583f864bfc2b9a38dbc307",
+  "config_sha256": "2b5b1ae1359b7a42057855f31cc591659b2f3b9d91c487c698dacaba843e944b",
+  "started_utc": "2026-10-29T08:46:02.717195+00:00",
+  "ray_tmpdir": "/dev/shm/pirl-formal-5s3l7jev",
+  "temporary_directory": "/dev/shm/pirl-formal-5s3l7jev/tmp",
+  "disk_temporary_directory": "/vepfs-C区/jiajunlu/SimpleVLA-RL/experiments/pi_rl/pi05-spatial-grpo-200step-save40-30e0236-20261029T083915Z/train/formal/runtime/tmp",
+  "ray_address": "local",
+  "gpu_count": 8,
+  "status": "training_completed",
+  "formal": true,
+  "budget": {
+    "outer_steps": 200,
+    "parallel_envs": 64,
+    "rollout_epochs": 8,
+    "global_batch_size": 2048,
+    "micro_batch_size": 128
+  },
+  "pid": 2604,
+  "returncode": 0,
+  "ended_utc": "2026-10-30T14:26:23.137094+00:00"
+}

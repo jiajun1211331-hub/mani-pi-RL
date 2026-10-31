@@ -1,0 +1,93 @@
+{
+  "python": "3.11.14 (main, Feb 12 2026, 00:42:50) [Clang 21.1.4 ]",
+  "prefix": "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236",
+  "platform": "Linux-5.4.250-9-velinux1-amd64-x86_64-with-glibc2.39",
+  "cuda_visible_devices": null,
+  "mujoco_egl_device_id": null,
+  "libc": [
+    "glibc",
+    "2.39"
+  ],
+  "packages": {
+    "torch": "2.7.1",
+    "torchvision": "0.22.1",
+    "transformers": "4.57.6",
+    "rlinf-transformer-openpi": "4.53.2",
+    "rlinf-openpi": "0.1.1",
+    "rlinf-libero": "0.1.3",
+    "ray": "2.59.0",
+    "numpy": "1.26.4",
+    "mujoco": "3.3.7",
+    "robosuite": "1.4.1",
+    "tokenizers": "0.21.4",
+    "jax": "0.5.3",
+    "jaxlib": "0.5.3",
+    "orbax-checkpoint": "0.11.13",
+    "flash-attn": "2.7.4.post1",
+    "triton": "3.3.1"
+  },
+  "imported_modules": {
+    "torch": {
+      "path": "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/torch/__init__.py",
+      "version": "2.7.1+cu126"
+    },
+    "transformers": {
+      "path": "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/transformers/__init__.py",
+      "version": "4.53.2"
+    },
+    "openpi": {
+      "path": "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/openpi/__init__.py",
+      "version": null
+    },
+    "libero.libero": {
+      "path": "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/libero/libero/__init__.py",
+      "version": null
+    },
+    "mujoco": {
+      "path": "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/mujoco/__init__.py",
+      "version": "3.3.7"
+    },
+    "robosuite": {
+      "path": "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/robosuite/__init__.py",
+      "version": "1.4.1"
+    },
+    "ray": {
+      "path": "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/ray/__init__.py",
+      "version": "2.59.0"
+    }
+  },
+  "transformers_replacements": [
+    {
+      "file": "models/gemma/configuration_gemma.py",
+      "sha256": "26fd0d0f52730ab32b6f337eb73ae9a26cb71ae0915bc49eced1d0e2ed8d0ec6"
+    },
+    {
+      "file": "models/gemma/modeling_gemma.py",
+      "sha256": "17eeb54e277939e58cd6f8a92719a275e36baf0c9f463b2754227d42f87aedde"
+    },
+    {
+      "file": "models/paligemma/modeling_paligemma.py",
+      "sha256": "c945d330b829264f927f3ee5339f977238631772de07a28e855e265bb85fd53c"
+    },
+    {
+      "file": "models/siglip/check.py",
+      "sha256": "466e8eb7887ac5ccc98118a3169298d6ab65a284d834bae74751e3854dbc4245"
+    },
+    {
+      "file": "models/siglip/modeling_siglip.py",
+      "sha256": "ef2e99500f263fdd78db9d4d9a255e29d844eb92f53c25ad640f8056700ef84b"
+    }
+  ],
+  "torch_cuda_build": "12.6",
+  "cuda_available": true,
+  "gpus": [
+    "NVIDIA A800-SXM4-80GB",
+    "NVIDIA A800-SXM4-80GB",
+    "NVIDIA A800-SXM4-80GB",
+    "NVIDIA A800-SXM4-80GB",
+    "NVIDIA A800-SXM4-80GB",
+    "NVIDIA A800-SXM4-80GB",
+    "NVIDIA A800-SXM4-80GB",
+    "NVIDIA A800-SXM4-80GB"
+  ]
+}

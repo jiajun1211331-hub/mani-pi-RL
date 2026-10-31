@@ -1,0 +1,80 @@
+{
+  "ready_for_native_measurement": true,
+  "checks": {
+    "both_native_gpu_probes": true,
+    "complete_native_weight_loading": true,
+    "strict_external_weight_loading": true,
+    "fixed_input_batch_one_shard_api": true,
+    "fp32_reference_calibration": true,
+    "simulation_state_reward_and_termination": true,
+    "raster_difference_is_sparse_uint8_quantization": true
+  },
+  "production_policy_batch_size": 1,
+  "production_precision": null,
+  "production_torch_compile": true,
+  "legacy_production_actions_passed_original_1e3_test": false,
+  "legacy_production_max_action_difference": 0.010103954644808955,
+  "fp32_combined_diagnostic_max_action_difference": 0.00033799429834391326,
+  "raster_diagnostics": [
+    {
+      "env_seed": 0,
+      "phase": "input_differences",
+      "camera": "main_images",
+      "max_uint8_difference": 0.0,
+      "changed_channel_fraction": 0.0
+    },
+    {
+      "env_seed": 0,
+      "phase": "input_differences",
+      "camera": "wrist_images",
+      "max_uint8_difference": 1.0,
+      "changed_channel_fraction": 3.0517578125e-05
+    },
+    {
+      "env_seed": 0,
+      "phase": "transition_differences",
+      "camera": "main_images",
+      "max_uint8_difference": 1.0,
+      "changed_channel_fraction": 1.52587890625e-05
+    },
+    {
+      "env_seed": 0,
+      "phase": "transition_differences",
+      "camera": "wrist_images",
+      "max_uint8_difference": 1.0,
+      "changed_channel_fraction": 9.1552734375e-05
+    },
+    {
+      "env_seed": 1,
+      "phase": "input_differences",
+      "camera": "main_images",
+      "max_uint8_difference": 0.0,
+      "changed_channel_fraction": 0.0
+    },
+    {
+      "env_seed": 1,
+      "phase": "input_differences",
+      "camera": "wrist_images",
+      "max_uint8_difference": 1.0,
+      "changed_channel_fraction": 4.57763671875e-05
+    },
+    {
+      "env_seed": 1,
+      "phase": "transition_differences",
+      "camera": "main_images",
+      "max_uint8_difference": 0.0,
+      "changed_channel_fraction": 0.0
+    },
+    {
+      "env_seed": 1,
+      "phase": "transition_differences",
+      "camera": "wrist_images",
+      "max_uint8_difference": 1.0,
+      "changed_channel_fraction": 4.57763671875e-05
+    }
+  ],
+  "scope": "Readiness for a current-official-native 500-episode measurement. Does not assert legacy production action equality, batch-size bitwise equality, exact paper software reproduction, or SFT SR acceptance.",
+  "comparison_rule": "Use the same native policy, batch size, episode/noise manifest, and precision for both SFT and RL. Standalone-220 is the standalone environment protocol with this common native policy.",
+  "required_next_gate": "Both full 500-episode protocols, complete hard checks, and no unexplained significant SFT SR discrepancy before formal GRPO.",
+  "diagnostic_limit": "The FP32/highest/eager comparison changes several precision/kernel settings together; it does not identify a single cause of mixed-precision differences. Production settings are not changed."
+}

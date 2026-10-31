@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "policy_batch_size": 1,
+  "atol": 1e-05,
+  "rtol": 1e-05,
+  "canonical_environment_seeds": 500,
+  "unique_episode_noise_seeds": 500,
+  "comparisons": [
+    {
+      "upstream_fixture_gpu": 0,
+      "same_noise": true,
+      "max_action_difference": 0.0,
+      "actions_equal": true
+    },
+    {
+      "upstream_fixture_gpu": 1,
+      "same_noise": true,
+      "max_action_difference": 0.0,
+      "actions_equal": true
+    }
+  ],
+  "save_video": false,
+  "scope": "Identical frozen observations/noise, batch one, two physical-GPU fixtures. Batch-two numerical differences and renderer LSB variation are separate diagnostics."
+}
