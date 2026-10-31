@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "copied_inputs_current_and_accounted_for": 33,
+  "original_scripts_preserved": 25,
+  "current_scripts_parse": 26,
+  "bilingual_command_blocks_identical": 22,
+  "shell_and_embedded_python_syntax": "passed",
+  "local_markdown_links": "passed",
+  "all_training_and_evaluation_scripts_match_gpu_snapshot": true,
+  "initializer_latest_revision": "separately executed from both clean official worktree and extracted transport clone"
+}

@@ -1,0 +1,15 @@
+{
+  "recipe-240": {
+    "n": 500,
+    "successes": 428,
+    "success_rate": 0.856,
+    "complete": true
+  },
+  "standalone-220": {
+    "n": 500,
+    "successes": 421,
+    "success_rate": 0.842,
+    "complete": true
+  },
+  "formal_checkpoint_hash_verified": "dd58e08f9e98174d7770c6839cbc3b898fd1dc0c0fcfe1a93297339019136211"
+}

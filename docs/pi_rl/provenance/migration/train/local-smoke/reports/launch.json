@@ -1,0 +1,36 @@
+{
+  "phase": "local-smoke",
+  "command": [
+    "/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/bin/python",
+    "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/source_snapshot/harness/run_official_training.py",
+    "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/source_snapshot/official/examples/embodiment/train_embodied_agent.py",
+    "--config-path",
+    "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/configs",
+    "--config-name",
+    "local-smoke",
+    "hydra.run.dir=\"/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/local-smoke/runtime/work\"",
+    "hydra.output_subdir=null",
+    "hydra.job.chdir=false"
+  ],
+  "cwd": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/source_snapshot/official",
+  "source_tree_sha256": "951c49ce9b5347341e086755e8361bc7ac64160a79c288fe3b052bccf67ba010",
+  "config_sha256": "0d886335e6df0d5d0b41eb753b798d45780b276d2fabebd956759e89cbd683d1",
+  "started_utc": "2026-10-31T02:29:25.082489+00:00",
+  "ray_tmpdir": "/dev/shm/pirl-local-smoke-1w2zau05",
+  "temporary_directory": "/dev/shm/pirl-local-smoke-1w2zau05/tmp",
+  "disk_temporary_directory": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/local-smoke/runtime/tmp",
+  "ray_address": "local",
+  "gpu_count": 2,
+  "status": "training_completed",
+  "formal": false,
+  "budget": {
+    "outer_steps": 1,
+    "parallel_envs": 16,
+    "rollout_epochs": 8,
+    "global_batch_size": 2048,
+    "micro_batch_size": 128
+  },
+  "pid": 1646650,
+  "returncode": 0,
+  "ended_utc": "2026-10-31T02:42:04.731818+00:00"
+}

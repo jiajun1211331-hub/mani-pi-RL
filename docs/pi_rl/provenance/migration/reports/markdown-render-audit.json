@@ -1,0 +1,22 @@
+{
+  "docs/PI05_GRPO_REPRODUCTION_HANDOFF.md": {
+    "headings": 12,
+    "code_blocks": 22,
+    "tables": 6
+  },
+  "docs/pi_rl/REPRODUCTION_HANDOFF_EN.md": {
+    "headings": 12,
+    "code_blocks": 22,
+    "tables": 6
+  },
+  "docs/pi_rl/README.md": {
+    "headings": 1,
+    "code_blocks": 0,
+    "tables": 1
+  },
+  "docs/pi_rl/VERIFICATION.md": {
+    "headings": 5,
+    "code_blocks": 1,
+    "tables": 0
+  }
+}

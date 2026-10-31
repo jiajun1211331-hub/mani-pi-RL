@@ -1,0 +1,7118 @@
+{
+  "passed": true,
+  "scope": "Actual official model factory before FSDP wrapping. CPU optimizer topology only; fused CUDA optimizer and post-FSDP dtypes require lifecycle/preflight verification.",
+  "model_class": "Pi0RL",
+  "total_parameters": 3353433872,
+  "trainable_parameters": 430098464,
+  "frozen_parameters": 2923335408,
+  "trainable_tensors": 190,
+  "frozen_tensors": 477,
+  "parameter_dtypes": {
+    "trainable": {
+      "torch.bfloat16": 311427072,
+      "torch.float32": 118671392
+    },
+    "frozen": {
+      "torch.bfloat16": 2922286192,
+      "torch.float32": 1049216
+    }
+  },
+  "optimizer_topology_exact": true,
+  "optimizer": {
+    "lr": 5e-06,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.01,
+    "amsgrad": false,
+    "maximize": false,
+    "foreach": null,
+    "capturable": false,
+    "differentiable": false,
+    "fused": null,
+    "decoupled_weight_decay": true
+  },
+  "violations": [],
+  "parameters": [
+    {
+      "name": "llm.embedder.embedding.weight",
+      "numel": 526647296,
+      "shape": [
+        257152,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.0.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.1.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.2.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.3.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.4.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.5.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.6.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.7.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.8.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.9.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.10.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.11.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.12.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.13.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.14.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.15.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.16.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.attn.q_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.attn.q_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        2048,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.attn.k_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.attn.k_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.attn.v_proj.0.weight",
+      "numel": 524288,
+      "shape": [
+        256,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.attn.v_proj.1.weight",
+      "numel": 262144,
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.attn.o_proj.0.weight",
+      "numel": 4194304,
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.attn.o_proj.1.weight",
+      "numel": 2097152,
+      "shape": [
+        1024,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.pre_attention_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.pre_attention_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.pre_attention_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.pre_ffw_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.pre_ffw_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.pre_ffw_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.mlps.0.w_gating",
+      "numel": 67108864,
+      "shape": [
+        2,
+        2048,
+        16384
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.mlps.0.w_linear",
+      "numel": 33554432,
+      "shape": [
+        16384,
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.mlps.1.w_gating",
+      "numel": 8388608,
+      "shape": [
+        2,
+        1024,
+        4096
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.layers.17.mlps.1.w_linear",
+      "numel": 4194304,
+      "shape": [
+        4096,
+        1024
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.final_norms.0.scale",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.final_norms.1.ada_modulation.weight",
+      "numel": 3145728,
+      "shape": [
+        3072,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "llm.final_norms.1.ada_modulation.bias",
+      "numel": 3072,
+      "shape": [
+        3072
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "img.pos_embedding",
+      "numel": 294912,
+      "shape": [
+        1,
+        256,
+        1152
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.stem.weight",
+      "numel": 677376,
+      "shape": [
+        1152,
+        3,
+        14,
+        14
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.stem.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.0.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.1.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.2.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.3.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.4.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.5.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.6.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.7.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.8.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.9.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.10.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.11.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.12.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.13.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.14.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.15.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.16.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.17.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.18.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.19.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.20.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.21.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.22.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.23.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.24.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.25.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.norm1.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.norm1.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.norm2.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.norm2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.attn.in_proj_weight",
+      "numel": 3981312,
+      "shape": [
+        3456,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.attn.in_proj_bias",
+      "numel": 3456,
+      "shape": [
+        3456
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.attn.out_proj.weight",
+      "numel": 1327104,
+      "shape": [
+        1152,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.attn.out_proj.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.mlp.fc1.weight",
+      "numel": 4958208,
+      "shape": [
+        4304,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.mlp.fc1.bias",
+      "numel": 4304,
+      "shape": [
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.mlp.fc2.weight",
+      "numel": 4958208,
+      "shape": [
+        1152,
+        4304
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.layers.26.mlp.fc2.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.norm.weight",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.encoder.norm.bias",
+      "numel": 1152,
+      "shape": [
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.head.weight",
+      "numel": 2359296,
+      "shape": [
+        2048,
+        1152
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "img.head.bias",
+      "numel": 2048,
+      "shape": [
+        2048
+      ],
+      "dtype": "torch.bfloat16",
+      "requires_grad": false,
+      "device": "cpu"
+    },
+    {
+      "name": "action_in_proj.weight",
+      "numel": 32768,
+      "shape": [
+        1024,
+        32
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "action_in_proj.bias",
+      "numel": 1024,
+      "shape": [
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "time_mlp_in.weight",
+      "numel": 1048576,
+      "shape": [
+        1024,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "time_mlp_in.bias",
+      "numel": 1024,
+      "shape": [
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "time_mlp_out.weight",
+      "numel": 1048576,
+      "shape": [
+        1024,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "time_mlp_out.bias",
+      "numel": 1024,
+      "shape": [
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "action_out_proj.weight",
+      "numel": 32768,
+      "shape": [
+        32,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    },
+    {
+      "name": "action_out_proj.bias",
+      "numel": 32,
+      "shape": [
+        32
+      ],
+      "dtype": "torch.float32",
+      "requires_grad": true,
+      "device": "cpu"
+    }
+  ]
+}

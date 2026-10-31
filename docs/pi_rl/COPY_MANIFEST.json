@@ -216,5 +216,22 @@
   },
   "clean_official_source_checkout": "/vepfs-C区/jiajunlu/rlinf-pirl-official-source-30e0236",
   "official_source_tree_unchanged": true,
-  "runtime_replay_scope": "Exact recorded package list, applied with --no-deps after the official installer; restore fork/replacements last. Dry-run is separate from clean-server installation verification."
+  "runtime_replay_scope": "Exact recorded package list, applied with --no-deps after the official installer; restore fork/replacements last. Dry-run is separate from clean-server installation verification.",
+  "added_code": {
+    "scripts/pi_rl/initialize_run.py": "d9744972bd204b493e287151c60a93aaeac01313aed6f7a1a4dc728c86309ef9"
+  },
+  "verification": {
+    "passed": true,
+    "cpu_tests_passed": 57,
+    "gpu_hardware": "2 x NVIDIA A100-SXM4-80GB",
+    "gpu_lifecycle": "docs/pi_rl/provenance/migration/train/local-smoke/reports/lifecycle.json",
+    "gpu_lifecycle_sha256": "3d77e84475580ee574294a34736b9868308a7f2ba1e586dcef9412928ed707a3",
+    "bilingual_docs_build_warnings": {
+      "en": 0,
+      "zh": 0
+    },
+    "transport_clone_initialization_audit_snapshot": "passed",
+    "fresh_physical_server_full_install_and_200_step_training_tested": false,
+    "no_volc_task_submitted_or_stopped": true
+  }
 }

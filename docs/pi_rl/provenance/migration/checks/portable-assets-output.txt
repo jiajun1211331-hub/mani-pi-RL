@@ -1,0 +1,8 @@
+Initializing the default config file...
+The following information is stored in the config file: /vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-initialize-portability-20261031/runtime/libero_config/config.yaml
+benchmark_root: /vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/libero/libero
+bddl_files: /vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/libero/libero/./bddl_files
+init_states: /vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/libero/libero/./init_files
+datasets: /vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/libero/libero/../datasets
+assets: /vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/libero/libero/./assets
+Reused LIBERO assets: 585 files; 20/20 Spatial BDDL/init hashes match

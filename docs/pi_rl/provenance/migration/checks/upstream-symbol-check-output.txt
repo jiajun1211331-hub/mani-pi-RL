@@ -1,0 +1,28 @@
+
+26 name(s) in code font that the repository does not define. Rename, delete, or add to ALLOWED if illustrative.
+docs/source-en/rst_source/concepts/channel.rst:227: s3
+docs/source-en/rst_source/concepts/channel.rst:230: s4
+docs/source-en/rst_source/concepts/channel.rst:232: s2
+docs/source-en/rst_source/concepts/channel.rst:233: s5
+docs/source-en/rst_source/concepts/realworld_envs.rst:125: use_camera_ids
+docs/source-en/rst_source/concepts/robotics_architecture.rst:344: gentle_tool
+docs/source-en/rst_source/extending/new_model_megatron.rst:271: tp_reshard_fn
+docs/source-en/rst_source/extending/new_model_megatron.rst:271: pp_reshard_fn
+docs/source-en/rst_source/extending/new_robot.rst:160: MobileManipulator
+docs/source-en/rst_source/extending/new_robot.rst:419: base_backend
+docs/source-en/rst_source/extending/new_robot.rst:420: base_endpoint
+docs/source-en/rst_source/extending/new_robot.rst:420: arm_ip
+docs/source-en/rst_source/extending/new_robot.rst:484: MobileManipulator
+docs/source-en/rst_source/extending/new_robot.rst:513: base_backend
+docs/source-zh/rst_source/concepts/channel.rst:214: s3
+docs/source-zh/rst_source/concepts/channel.rst:217: s4
+docs/source-zh/rst_source/concepts/channel.rst:219: s2
+docs/source-zh/rst_source/concepts/channel.rst:220: s5
+docs/source-zh/rst_source/concepts/realworld_envs.rst:68: use_camera_ids
+docs/source-zh/rst_source/concepts/robotics_architecture.rst:209: gentle_tool
+docs/source-zh/rst_source/extending/new_robot.rst:123: MobileManipulator
+docs/source-zh/rst_source/extending/new_robot.rst:320: base_backend
+docs/source-zh/rst_source/extending/new_robot.rst:320: base_endpoint
+docs/source-zh/rst_source/extending/new_robot.rst:320: arm_ip
+docs/source-zh/rst_source/extending/new_robot.rst:348: MobileManipulator
+docs/source-zh/rst_source/extending/new_robot.rst:369: base_backend

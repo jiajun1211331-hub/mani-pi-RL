@@ -1,0 +1,6 @@
+[build_docs] building source-en
+[build_docs] source-en: 0 warning(s)
+[build_docs] building source-zh
+[build_docs] source-zh: 0 warning(s)
+
+Both builds are clean.

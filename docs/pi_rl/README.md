@@ -12,6 +12,7 @@
 | [SFT 基线证据](provenance/baseline) | 两协议各 500 条原始记录、验收、环境和资产 hash |
 | [200 步训练证据](provenance/200step) | 云端训练退出、8 个 actor 的更新计数、checkpoint 严格重载及推理验收 |
 | [历史计划](../manifold/pi_rl/PI05_SPATIAL_GRPO_REPRODUCTION_PLAN_20261025.md) | 2026-10-25 至 29 日的设计、诊断与预算变更背景 |
+| [本次验证证据](provenance/migration) | 实际双卡生命周期、checkpoint 审计、57 项 CPU 测试和双语构建输出 |
 | [本次迁移验证](VERIFICATION.md) | 当前代码与文档的实际检查范围和结果 |
 
 `provenance` 中的绝对路径和任务状态属于记录产生时的历史证据。新服务器必须生成自己的 run manifest、GPU 探针、SFT 验收和训练生命周期报告；不要复制历史报告来通过新服务器启动门槛。

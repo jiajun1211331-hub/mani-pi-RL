@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "differences": [
+    {
+      "path": "actor.model.model_path",
+      "expected": "/path/to/model/RLinf-Pi05-LIBERO-SFT",
+      "actual": "/vepfs-C区/jiajunlu/ckpt/RLinf-Pi05-LIBERO-SFT",
+      "kind": "value"
+    },
+    {
+      "path": "env.eval.video_cfg.save_video",
+      "expected": true,
+      "actual": false,
+      "kind": "value"
+    },
+    {
+      "path": "env.eval.video_cfg.video_base_dir",
+      "expected": "../results/video/eval",
+      "actual": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/logs/video/eval",
+      "kind": "value"
+    },
+    {
+      "path": "env.train.video_cfg.save_video",
+      "expected": true,
+      "actual": false,
+      "kind": "value"
+    },
+    {
+      "path": "env.train.video_cfg.video_base_dir",
+      "expected": "../results/video/train",
+      "actual": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/logs/video/train",
+      "kind": "value"
+    },
+    {
+      "path": "rollout.model.model_path",
+      "expected": "/path/to/model/RLinf-Pi05-LIBERO-SFT",
+      "actual": "/vepfs-C区/jiajunlu/ckpt/RLinf-Pi05-LIBERO-SFT",
+      "kind": "value"
+    },
+    {
+      "path": "runner.logger.experiment_name",
+      "expected": "libero_spatial_grpo_openpi_pi05",
+      "actual": "handoff-verification-20261031-v2",
+      "kind": "value"
+    },
+    {
+      "path": "runner.logger.log_path",
+      "expected": "../results",
+      "actual": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/logs",
+      "kind": "value"
+    },
+    {
+      "path": "runner.max_epochs",
+      "expected": 1000,
+      "actual": 200,
+      "kind": "value"
+    }
+  ],
+  "violations": [],
+  "allowed_overrides": {
+    "actor.model.model_path": "/vepfs-C区/jiajunlu/ckpt/RLinf-Pi05-LIBERO-SFT",
+    "rollout.model.model_path": "/vepfs-C区/jiajunlu/ckpt/RLinf-Pi05-LIBERO-SFT",
+    "runner.logger.log_path": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/logs",
+    "runner.logger.experiment_name": "handoff-verification-20261031-v2",
+    "env.train.video_cfg.save_video": false,
+    "env.eval.video_cfg.save_video": false,
+    "env.train.video_cfg.video_base_dir": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/logs/video/train",
+    "env.eval.video_cfg.video_base_dir": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/logs/video/eval",
+    "runner.max_epochs": 200,
+    "runner.save_interval": 40
+  },
+  "official_commit": "30e0236981c6a1dc19202de64116834c12673828",
+  "budget": {
+    "outer_rl_steps": 200,
+    "raw_trajectory_slots_per_step": 512,
+    "expected_optimizer_updates_per_step": 12
+  }
+}

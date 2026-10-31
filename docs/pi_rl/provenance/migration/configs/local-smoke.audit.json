@@ -1,0 +1,99 @@
+{
+  "passed": true,
+  "differences": [
+    {
+      "path": "actor.model.model_path",
+      "expected": "/path/to/model/RLinf-Pi05-LIBERO-SFT",
+      "actual": "/vepfs-C区/jiajunlu/ckpt/RLinf-Pi05-LIBERO-SFT",
+      "kind": "value"
+    },
+    {
+      "path": "env.eval.total_num_envs",
+      "expected": 500,
+      "actual": 2,
+      "kind": "value"
+    },
+    {
+      "path": "env.eval.video_cfg.save_video",
+      "expected": true,
+      "actual": false,
+      "kind": "value"
+    },
+    {
+      "path": "env.eval.video_cfg.video_base_dir",
+      "expected": "../results/video/eval",
+      "actual": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/local-smoke/logs/video/eval",
+      "kind": "value"
+    },
+    {
+      "path": "env.train.total_num_envs",
+      "expected": 64,
+      "actual": 16,
+      "kind": "value"
+    },
+    {
+      "path": "env.train.video_cfg.save_video",
+      "expected": true,
+      "actual": false,
+      "kind": "value"
+    },
+    {
+      "path": "env.train.video_cfg.video_base_dir",
+      "expected": "../results/video/train",
+      "actual": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/local-smoke/logs/video/train",
+      "kind": "value"
+    },
+    {
+      "path": "rollout.model.model_path",
+      "expected": "/path/to/model/RLinf-Pi05-LIBERO-SFT",
+      "actual": "/vepfs-C区/jiajunlu/ckpt/RLinf-Pi05-LIBERO-SFT",
+      "kind": "value"
+    },
+    {
+      "path": "runner.logger.experiment_name",
+      "expected": "libero_spatial_grpo_openpi_pi05",
+      "actual": "handoff-verification-20261031-v2-local-smoke",
+      "kind": "value"
+    },
+    {
+      "path": "runner.logger.log_path",
+      "expected": "../results",
+      "actual": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/local-smoke/logs",
+      "kind": "value"
+    },
+    {
+      "path": "runner.max_epochs",
+      "expected": 1000,
+      "actual": 1,
+      "kind": "value"
+    },
+    {
+      "path": "runner.save_interval",
+      "expected": 40,
+      "actual": 1,
+      "kind": "value"
+    },
+    {
+      "path": "runner.val_check_interval",
+      "expected": -1,
+      "actual": 1,
+      "kind": "value"
+    }
+  ],
+  "violations": [],
+  "allowed_overrides": {
+    "actor.model.model_path": "/vepfs-C区/jiajunlu/ckpt/RLinf-Pi05-LIBERO-SFT",
+    "rollout.model.model_path": "/vepfs-C区/jiajunlu/ckpt/RLinf-Pi05-LIBERO-SFT",
+    "runner.logger.log_path": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/local-smoke/logs",
+    "runner.logger.experiment_name": "handoff-verification-20261031-v2-local-smoke",
+    "env.train.video_cfg.save_video": false,
+    "env.eval.video_cfg.save_video": false,
+    "env.train.video_cfg.video_base_dir": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/local-smoke/logs/video/train",
+    "env.eval.video_cfg.video_base_dir": "/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-verification-20261031-v2/train/local-smoke/logs/video/eval",
+    "runner.max_epochs": 1,
+    "runner.save_interval": 1,
+    "runner.val_check_interval": 1,
+    "env.eval.total_num_envs": 2,
+    "env.train.total_num_envs": 16
+  }
+}

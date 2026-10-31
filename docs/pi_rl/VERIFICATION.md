@@ -17,10 +17,12 @@
 - 真实执行 `initialize_run.py`，使用独立官方检出、不同的资产根目录及测试用 Volc 资源 JSON；配置审计和完整源码冻结通过，没有提交任务。
 - `prepare_run.py link-assets`：585 个资产文件已记录 hash，20/20 Spatial BDDL/init 与安装包一致。
 - `prepare_run.py verify-sft`：4 个文件大小/hash、32 维 norm stats 检查通过。
-- 26 个当前 Python 文件通过语法解析；中英文 22 个代码块完全相同，shell 与内嵌 Python 语法通过。
+- 26 个当前 Python 文件通过语法解析；中英文 22 个代码块完全相同，shell 与内嵌 Python 语法通过。两篇接手文档均实际解析为 12 个标题、22 个代码块、6 张表，HTML 生成通过。
 - `docs-check/build_docs.py`：EN、ZH 各 0 warnings。首次因长 TMPDIR 触发 Unix socket 路径限制，改用独立短 `/dev/shm/pirl-docs-*` 后通过；失败日志保留。
 - `check_rst_markup.py`：No inline-markup problems found。
 - `check_doc_symbols.py`：上游现有 Sphinx 页面有 26 个待识别名称；本次没有修改这些 EN/ZH 页面。新增 Markdown 的脚本路径、CLI 参数、模型/环境配置和相对链接另行核对。
+
+新增接手文档检查范围：No doc-code or EN-ZH consistency issues found in checked scope.
 
 环境重放的离线 dry-run 揭示了仓库默认 Torch/torchvision overrides 冲突；文档已要求官方安装器在干净源码目录运行，包重放使用 `uv --no-config pip install --no-deps`。禁用项目配置后的离线检查因 FlashAttention wheel 未缓存而无法完成解析；未在当前共享训练 venv 执行重装，也未将这个检查记为完整新机安装成功。
 
@@ -44,7 +46,9 @@ CUDA_VISIBLE_DEVICES=0,1 "$CHECK_PY" "$CHECK_RUN/source_snapshot/harness/launch_
   --run "$CHECK_RUN" --phase local-smoke
 ```
 
-双 GPU EGL/reset/step/原生推理和 CPU actor 参数审计已通过。有限训练验证正在运行，最终结果将在完成后更新；当前不将其记为完整 train/val/save/reload/infer 通过。
+双 GPU EGL/reset/step/原生推理和 CPU actor 参数审计通过。完整有限生命周期已通过：每卡 1 个外层训练步、3 次 optimizer update、validation 2/2、checkpoint 保存、667 tensors 严格重载、477 个冻结 tensor 不变、190 个 action expert tensor 更新，以及两协议共 4 条重载后推理全部完成。训练与检查进程返回码均为 0。详见[本次 lifecycle](provenance/migration/train/local-smoke/reports/lifecycle.json)、[checkpoint 审计](provenance/migration/train/local-smoke/reports/checkpoint.json)和[验证输出](provenance/migration/checks)。
+
+GPU 检查快照中的全部训练/评测脚本与当前封装逐文件相同；初始化脚本最后的元数据路径适配另行通过了独立 worktree 和解压包测试。
 
 本次 local-smoke 使用历史 SFT manifest 和已完成基线 summary 作为输入，未重新测量两个 500-episode SFT 基线。这些复用只用于当前同环境、同权重的有限生命周期检查。新服务器必须按主文档重新生成自己的 SFT 数据、readiness 和验收，不能复制这些报告通过启动门槛。
 

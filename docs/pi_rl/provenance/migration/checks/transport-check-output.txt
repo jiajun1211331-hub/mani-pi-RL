@@ -1,0 +1,11 @@
+Cloning into '/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-transport-check'...
+done.
+HEAD is now at 30e02369 feat(openpi): support full and gradient sharding (#1701)
+/vepfs-C区/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-transport-run/runtime/install_reuse_assets.sh
+{"run": "/vepfs-C\u533a/jiajunlu/rlinf-pirl-official-30e0236/experiments/pi_rl/handoff-transport-run", "initialized": true, "validated": false}
+/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/hydra/_internal/defaults_list.py:262: UserWarning: In 'libero_spatial_grpo_openpi_pi05': Defaults list is missing `_self_`. See https://hydra.cc/docs/1.2/upgrades/1.0_to_1.1/default_composition_order for more information
+  warnings.warn(msg, UserWarning)
+{"passed": true, "allowed_differences": 9, "outer_rl_steps": 200}
+/vepfs-C区/jiajunlu/.envs/pirl-openpi-30e0236/lib/python3.11/site-packages/hydra/_internal/defaults_list.py:262: UserWarning: In 'libero_spatial_grpo_openpi_pi05': Defaults list is missing `_self_`. See https://hydra.cc/docs/1.2/upgrades/1.0_to_1.1/default_composition_order for more information
+  warnings.warn(msg, UserWarning)
+{"frozen_files": 2280, "config_sha256": {"local-smoke": "c350bead8fdf23e1ddb3266100020c22d228d944ff77213d863417721e4de1a7", "cloud-preflight": "9e1827c8b2bfeaf88cc118c870c87e9c2f9c7a084cf5d16258c0a6cfe856030e", "formal": "7708c93f3edc9c22cc6cbec63fcd7ce617a68165191d95916411b015c4c81081"}, "submitted": false}
