@@ -7,9 +7,9 @@
 | 组合 | 真实 train/val/save | strict 重载与独立 infer | 几何信号 |
 | --- | --- | --- | --- |
 | disabled | 通过：每 rank 24 次更新，梯度/loss 有限，step 1 保存 | 通过：477 个冻结张量不变，190 个可训练张量变化，GPU infer 有限且无 hidden | 不适用，train/eval 均不采集 hidden |
-| task_plus_geometry / G | 通过：每 rank 24 次有限更新，val 与 step 1 保存完成 | 正在验证 | 两组有效 mixed，K=370/208，几何 L2≈3.995 |
-| geometry_only / G | 已准备，尚未运行 | 尚未运行 | 尚未验证 |
-| task_plus_geometry / V | 已准备，尚未运行 | 尚未运行 | 尚未验证 |
+| task_plus_geometry / G | 通过：每 rank 24 次有限更新，val 与 step 1 保存完成 | 通过：strict 重载、标量重放与独立 GPU infer | 两组有效 mixed，K=370/208，几何 L2≈3.995 |
+| geometry_only / G | 通过：每 rank 24 次有限更新，val 与 step 1 保存完成 | 通过：strict 重载、标量重放与独立 GPU infer | 一个有效几何组，最终/几何 L2 均≈2.425 |
+| task_plus_geometry / V | 正在运行 | 尚未运行 | 尚未验证 |
 | geometry_only / V | C08 静态组合已通过 | 不在本轮生命周期覆盖范围 | 不作生命周期结论 |
 
 disabled 的原生 advantage/mask/loss/RNG 与 HEAD 基线一致性由 [C05_VALIDATION.md](C05_VALIDATION.md) 的对照证明；当前真实运行补充原生训练、val、保存与重载证据，不宣称训练曲线等价。
@@ -48,8 +48,16 @@ disabled-02 的重载脚本初轮发现通用 model builder 默认将模型放�
 
 当次实际 hidden 对两组均产生有效 D/V/G，无 invalid 组；两组为 mixed，K 分别为 370 和 208，组 G 均值/std 分别约为 36.272312/2.281670 与 40.045219/1.546754。第一组首成员 D=19.786557、V=277.873164、G=38.417344，第二组首成员 D=18.376725、V=262.224836、G=41.742918；原始精度值及独立状态保存在 contemporaneous 标量审计中。
 
-几何 advantage 的全局 L2=3.9949949736623407，评分最慢 rank 耗时 1.5783165879547596 秒，实际 CPU hidden 张量合计 31,457,280 字节（30 MiB）。后者是实际张量字节数，不是 CPU 峰值内存。strict 重载、标量重放及独立 infer 验收正在运行，日志为该目录的 `runtime/verify.log`。
+几何 advantage 的全局 L2=3.9949949736623407，评分最慢 rank 耗时 1.5783165879547596 秒，实际 CPU hidden 张量合计 31,457,280 字节（30 MiB）。后者是实际张量字节数，不是 CPU 峰值内存。
+
+strict 重载、当次标量重放与独立 infer 均通过，`runtime/lifecycle.json` 为 passed=true，核对日志为 `runtime/verify.log`。477 个冻结张量不变，190 个可训练张量变化，推理输出 [8,10,7] 有限且无 hidden。核对耗时 83.01 秒；checkpoint SHA-256 为 `0541af0f9984f1c4aa84001b7fe8781f0c1e24d586fd45cbb46133a68b149f64`。
+
+## G-only 的真实运行
+
+运行目录为 `experiments/pi_rl/mani_v1_checks/c09-g-only-01`。每 rank 完成 24 次有限更新、0 次跳过，val 与 step 1 保存通过，训练进程 returncode=0。本轮两个原始组中有一个有效几何组，task advantage 的 L2=13.294697592308292，geometry/final advantage 的 L2 均为 2.4248700590661847，符合纯几何组合。评分最慢 rank 耗时 1.1424908824265003 秒。
+
+strict 重载、标量重放和独立 GPU infer 已通过；477 个冻结张量不变、190 个可训练张量变化，推理无 hidden。核对耗时 128.53 秒，checkpoint SHA-256 为 `9000e3e7b68a16aa7b215bec26bc754771fb5b451250039dc3f27fece3a7c5fb`。完整原始证据保存于该 run 的 `runtime/lifecycle.json`。
 
 ## 尚未完成的验收
 
-必须完成所列 G 混合、G-only、V 混合的真实运行，并确认非零几何信号、实际参数变化及各自完整权重 strict 重载与独立 infer。CPU/GPU 附加内存和评分耗时正在采集，当前不把 hidden 理论大小写成峰值实测。没有启动正式训练或云任务，没有停止已有实验。
+必须完成 V 混合的真实运行，确认非零几何信号、实际参数变化及完整权重 strict 重载与独立 infer。CPU/GPU 附加内存和评分耗时正在汇总，当前不把 hidden 理论大小写成峰值实测。没有启动正式训练或云任务，没有停止已有实验。
