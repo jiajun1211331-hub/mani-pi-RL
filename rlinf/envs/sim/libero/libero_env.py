@@ -1034,6 +1034,57 @@ class LiberoEnv(gym.Env):
             infos_list,
         )
 
+    def get_manifold_context(
+        self, terminations: torch.Tensor, truncations: torch.Tensor
+    ) -> dict[str, torch.Tensor]:
+        """Return current episode IDs and exact executed-action success boundaries.
+
+        LIBERO termination denotes success. This contract requires uncollapsed
+        per-action boundaries and stable episode identities within the chunk.
+        """
+        if self.auto_reset or self.ignore_terminations or self.is_eval:
+            raise ValueError(
+                "Manifold collection requires training with auto_reset=False "
+                "and ignore_terminations=False."
+            )
+        if (
+            terminations.ndim != 2
+            or terminations.shape != truncations.shape
+            or terminations.shape[0] != self.num_envs
+        ):
+            raise ValueError(
+                f"Expected per-action boundaries [B,C] for B={self.num_envs}, "
+                f"found {tuple(terminations.shape)} and {tuple(truncations.shape)}."
+            )
+        if self.num_envs % self.group_size:
+            raise ValueError(
+                "Expected complete manifold groups in one environment shard."
+            )
+        task_ids = torch.as_tensor(self.task_ids, dtype=torch.int64).clone()
+        trial_ids = torch.as_tensor(self.trial_ids, dtype=torch.int64).clone()
+        # Reconstruct from the current episode, since reset() may select IDs
+        # independently of the cached future reset-state pool.
+        starts = torch.tensor(
+            [
+                int(self.cumsum_trial_id_bins[task - 1]) if task else 0
+                for task in self.task_ids
+            ],
+            dtype=torch.int64,
+        )
+        dones = (terminations | truncations).detach().cpu()
+        ended_before = dones.to(torch.int64).cumsum(dim=1) - dones.to(torch.int64)
+        members = torch.arange(self.num_envs, dtype=torch.int64)
+        return {
+            "task_id": task_ids,
+            "trial_id": trial_ids,
+            "reset_state_id": starts + trial_ids,
+            "group_slot": members // self.group_size,
+            "member_id": members % self.group_size,
+            "action_dones": dones.clone(),
+            "action_successes": terminations.detach().cpu().clone(),
+            "action_valid": ended_before == 0,
+        }
+
     def _handle_auto_reset(self, dones, _final_obs, infos):
         if self.is_eval:
             return self._handle_eval_auto_reset(dones, _final_obs, infos)

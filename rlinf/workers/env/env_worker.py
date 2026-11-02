@@ -70,6 +70,10 @@ class EnvWorker(Worker):
         self._trajectory_step = 0
         self._component_placement = HybridComponentPlacement(cfg, Cluster())
 
+        self.collect_manifold = (
+            OmegaConf.select(self.cfg, "algorithm.manifold.mode", default="disabled")
+            != "disabled"
+        )
         self.collect_transitions = self.cfg.rollout.get("collect_transitions", False)
         self.collect_prev_infos = self.cfg.rollout.get("collect_prev_infos", True)
         self.collect_final_values = self.cfg.rollout.get("collect_final_values", True)
@@ -249,6 +253,10 @@ class EnvWorker(Worker):
                 self.history_lengths = [{} for _ in range(self.stage_num)]
 
         self._init_env()
+
+        from rlinf.algorithms.manifold.snapshot import verify_runtime_source
+
+        verify_runtime_source("env")
 
     def update_env_cfg(self):
         if self.enable_train:
@@ -938,8 +946,19 @@ class EnvWorker(Worker):
             policy_input = self._build_policy_input(env_output)
         # Piggyback the completed transition on the next policy request so
         # Rollout remains the Actor channel's only producer.
+        manifold_context = {}
+        if getattr(self, "collect_manifold", False):
+            get_context = get_env_attr(self.env_list[stage_id], "get_manifold_context")
+            if not callable(get_context):
+                raise ValueError(
+                    "Expected an environment supporting exact manifold episode metadata."
+                )
+            manifold_context = get_context(
+                env_output.terminations, env_output.truncations
+            )
         env_part = EnvPart(
             sources=[source],
+            manifold_context=manifold_context,
             transition=self._build_env_transition(
                 env_output,
                 stage_id=stage_id,

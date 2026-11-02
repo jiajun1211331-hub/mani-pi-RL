@@ -155,8 +155,15 @@ class Pi0RL(EnvIO, Pi0):
         *,
         noise: torch.Tensor | None = None,
         rng: torch.Generator | None = None,
+        collect_manifold_hidden: bool = False,
         **kwargs,
     ) -> tuple[torch.Tensor, dict[str, Any]]:
+        """Sample actions and replay inputs, optionally with training features.
+
+        ``collect_manifold_hidden`` returns detached FP32 [B,C,1024] features
+        from the final actual denoise projection in train mode. Evaluation
+        keeps its standard output contract.
+        """
         del kwargs
         repacked = repack_env_obs(
             self.config_name,
@@ -169,7 +176,11 @@ class Pi0RL(EnvIO, Pi0):
         if mode == "eval":
             return self._predict_eval(observation, noise=noise, rng=rng)
         actions, result = self._predict_train(
-            observation, noise=noise, rng=rng, compute_values=compute_values
+            observation,
+            noise=noise,
+            rng=rng,
+            compute_values=compute_values,
+            collect_manifold_hidden=collect_manifold_hidden,
         )
         # Match OpenPI: stash raw env obs so the actor can re-transform.
         result["forward_inputs"].update(_clone_replay_obs(repacked))
@@ -182,6 +193,7 @@ class Pi0RL(EnvIO, Pi0):
         noise: torch.Tensor | None,
         rng: torch.Generator | None,
         compute_values: bool,
+        collect_manifold_hidden: bool = False,
     ) -> tuple[torch.Tensor, dict[str, Any]]:
         rl_cfg = self.rl_cfg
         device = self.device
@@ -311,12 +323,21 @@ class Pi0RL(EnvIO, Pi0):
             forward_inputs.update(nft_state)
             forward_inputs["nft_x0"] = x_0.detach()
 
-        return actions, {
+        result = {
             "prev_logprobs": log_probs_picked,
             "prev_values": prev_values,
             "forward_inputs": forward_inputs,
             "model_actions": x_0,
         }
+        if collect_manifold_hidden:
+            hidden = suffix_act[:, : self.action_chunk]
+            if hidden.shape != (B, self.action_chunk, 1024):
+                raise ValueError(
+                    "Expected manifold action features "
+                    f"[{B},{self.action_chunk},1024], found {tuple(hidden.shape)}"
+                )
+            result["manifold_hidden"] = hidden.detach().float().clone()
+        return actions, result
 
     def _init_nft_state(
         self,

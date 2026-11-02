@@ -18,7 +18,7 @@ import hydra
 import torch.multiprocessing as mp
 from omegaconf.omegaconf import OmegaConf
 
-from rlinf.config import validate_cfg
+from rlinf.config import validate_cfg, validate_manifold_cfg
 from rlinf.scheduler import Cluster
 from rlinf.utils.placement import HybridComponentPlacement
 from rlinf.workers.env.async_env_worker import AsyncEnvWorker
@@ -34,6 +34,7 @@ mp.set_start_method("spawn", force=True)
     version_base="1.1", config_path="config", config_name="maniskill_sac_mlp_async"
 )
 def main(cfg) -> None:
+    validate_manifold_cfg(cfg, synchronous=False)
     cfg = validate_cfg(cfg)
     print(json.dumps(OmegaConf.to_container(cfg, resolve=True), indent=2))
 

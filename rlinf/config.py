@@ -15,6 +15,7 @@
 import dataclasses
 import importlib.util
 import logging
+import math
 import os
 from dataclasses import asdict
 from typing import TYPE_CHECKING, Callable, ClassVar, Optional
@@ -28,6 +29,7 @@ from omegaconf.dictconfig import DictConfig
 import rlinf.robotics.robots  # noqa: F401
 from rlinf.envs import SupportedEnvType
 from rlinf.scheduler.cluster import Cluster
+from rlinf.scheduler.placement import Placement
 from rlinf.utils.fsdp_config import validate_fsdp_wrapper_config
 from rlinf.utils.placement import (
     HybridComponentPlacement,
@@ -1052,6 +1054,237 @@ def validate_online_lerobot_env_cfg(cfg: DictConfig) -> None:
     )
 
 
+def validate_manifold_cfg(
+    cfg: DictConfig,
+    *,
+    synchronous: bool = True,
+    placements: Optional[dict[str, list[Placement]]] = None,
+) -> None:
+    """Validate the first manifold interface without rewriting user settings.
+
+    Enabled training requires synchronous colocated pi0.5 LIBERO GRPO with
+    complete groups on every scoring shard. Disabled mode loads no TLE package.
+    """
+    options = OmegaConf.select(cfg, "algorithm.manifold", default={})
+    if options is None:
+        raise ValueError("Expected algorithm.manifold to be a mapping, found null.")
+
+    def fields(value, allowed, path):
+        if not isinstance(value, (dict, DictConfig)):
+            raise ValueError(
+                f"Expected {path} to be a mapping, found {type(value).__name__}."
+            )
+        unknown = set(value) - set(allowed)
+        if unknown:
+            raise ValueError(f"Unknown {path} fields: {sorted(unknown)}.")
+
+    fields(
+        options,
+        {
+            "mode",
+            "eligible_groups",
+            "weight",
+            "feature",
+            "geometry",
+            "prefix",
+            "normalization",
+            "diagnostics",
+        },
+        "algorithm.manifold",
+    )
+    mode = options.get("mode", "disabled")
+    if mode not in {"disabled", "task_plus_geometry", "geometry_only"}:
+        raise ValueError(
+            f"Expected manifold mode disabled, task_plus_geometry or geometry_only, found {mode!r}."
+        )
+    eligible = options.get("eligible_groups", "any_success")
+    if eligible not in {"mixed_only", "any_success"}:
+        raise ValueError(
+            f"Expected manifold eligible_groups mixed_only or any_success, found {eligible!r}."
+        )
+    sections = {
+        "feature": {
+            "source": "action_expert_pre_output",
+            "denoise_step": "last",
+            "storage_dtype": "float32",
+        },
+        "geometry": {"granularity": "action", "compute_dtype": "float64"},
+        "prefix": {"rule": "min_success_actions", "update_boundary": "full_chunk"},
+        "normalization": {"std_correction": 1},
+    }
+    for section, constants in sections.items():
+        allowed = set(constants)
+        if section == "geometry":
+            allowed.update({"score", "tle_k", "tle_epsilon", "alpha"})
+        elif section == "normalization":
+            allowed.update({"epsilon", "min_group_std"})
+        value = options.get(section, {})
+        fields(value, allowed, f"algorithm.manifold.{section}")
+        for name, expected in constants.items():
+            actual = value.get(name, expected)
+            if actual != expected:
+                raise ValueError(
+                    f"Expected algorithm.manifold.{section}.{name}={expected!r}, found {actual!r}."
+                )
+    geometry = options.get("geometry", {})
+    normalization = options.get("normalization", {})
+    score = geometry.get("score", "volume_exp_neg_dim")
+    if score not in {"volume", "volume_exp_neg_dim"}:
+        raise ValueError(
+            f"Expected manifold geometry.score volume or volume_exp_neg_dim, found {score!r}."
+        )
+    k = geometry.get("tle_k", 10)
+    if not isinstance(k, int) or isinstance(k, bool) or k < 1:
+        raise ValueError(f"Expected positive integer manifold tle_k, found {k!r}.")
+    for name, value, positive in (
+        ("weight", options.get("weight", 0.2), False),
+        ("tle_epsilon", geometry.get("tle_epsilon", 1e-4), True),
+        ("alpha", geometry.get("alpha", 0.1), False),
+        ("normalization.epsilon", normalization.get("epsilon", 1e-6), True),
+        (
+            "normalization.min_group_std",
+            normalization.get("min_group_std", 1e-6),
+            False,
+        ),
+    ):
+        if (
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(value)
+            or (value <= 0 if positive else value < 0)
+        ):
+            raise ValueError(
+                f"Expected a finite {'positive' if positive else 'nonnegative'} manifold {name}, found {value!r}."
+            )
+    diagnostics = options.get("diagnostics", {})
+    fields(
+        diagnostics,
+        {"audit_dir", "dimension_metrics", "debug_hidden_max_trajectories"},
+        "algorithm.manifold.diagnostics",
+    )
+    limit = diagnostics.get("debug_hidden_max_trajectories", 0)
+    if not isinstance(limit, int) or isinstance(limit, bool) or limit < 0:
+        raise ValueError(
+            "Expected nonnegative integer diagnostics.debug_hidden_max_trajectories."
+        )
+    if not isinstance(diagnostics.get("dimension_metrics", False), bool):
+        raise ValueError("Expected boolean diagnostics.dimension_metrics.")
+    if diagnostics.get("audit_dir") is not None and not isinstance(
+        diagnostics["audit_dir"], str
+    ):
+        raise ValueError("Expected diagnostics.audit_dir to be a path string or null.")
+    if mode == "disabled":
+        return
+    if not synchronous:
+        raise ValueError(
+            "Manifold training requires the synchronous train_embodied_agent.py entry point."
+        )
+    expected_fields = {
+        "runner.task_type": "embodied",
+        "runner.only_eval": False,
+        "runner.enable_decoupled_mode": False,
+        "runner.use_training_pipeline": False,
+        "actor.training_backend": "fsdp",
+        "actor.model.model_type": "openpi",
+        "actor.model.pi05": True,
+        "actor.model.num_action_chunks": 10,
+        "actor.model.num_steps": 4,
+        "actor.model.openpi.task": "rl",
+        "actor.model.openpi.noise_method": "flow_sde",
+        "actor.model.openpi.train_expert_only": True,
+        "actor.model.openpi.joint_logprob": False,
+        "actor.model.openpi.is_nft": False,
+        "actor.model.add_value_head": False,
+        "actor.enable_sft_co_train": False,
+        "rollout.pipeline_stage_num": 1,
+        "rollout.generation_backend": "huggingface",
+        "rollout.collect_prev_infos": True,
+        "rollout.recompute_logprobs": False,
+        "algorithm.adv_type": "grpo",
+        "algorithm.loss_type": "actor",
+        "algorithm.reward_type": "chunk_level",
+        "algorithm.logprob_type": "chunk_level",
+        "algorithm.group_size": 8,
+        "algorithm.recompute_logprobs": False,
+        "algorithm.entropy_bonus": 0,
+        "algorithm.kl_beta": 0,
+        "env.train.env_type": "libero",
+        "env.train.task_suite_name": "libero_10",
+        "env.train.group_size": 8,
+        "env.train.auto_reset": False,
+        "env.train.ignore_terminations": False,
+        "env.train.use_fixed_reset_state_ids": True,
+        "env.train.use_rel_reward": True,
+        "env.train.use_step_penalty": False,
+        "reward.use_reward_model": False,
+    }
+    default_fields = {
+        "runner.only_eval",
+        "runner.enable_decoupled_mode",
+        "runner.use_training_pipeline",
+        "actor.model.pi05",
+        "actor.model.openpi.joint_logprob",
+        "actor.model.openpi.is_nft",
+        "actor.model.add_value_head",
+        "actor.enable_sft_co_train",
+        "rollout.collect_prev_infos",
+        "rollout.recompute_logprobs",
+        "algorithm.recompute_logprobs",
+        "algorithm.kl_beta",
+        "env.train.use_step_penalty",
+        "reward.use_reward_model",
+    }
+    for path, expected in expected_fields.items():
+        actual = OmegaConf.select(
+            cfg, path, default=expected if path in default_fields else None
+        )
+        if actual != expected:
+            raise ValueError(
+                f"Manifold training requires {path}={expected!r}, found {actual!r}."
+            )
+    for path, expected in (
+        ("actor.model.openpi.num_steps", 4),
+        ("actor.model.openpi.action_chunk", 10),
+    ):
+        actual = OmegaConf.select(cfg, path, default=expected)
+        if actual != expected:
+            raise ValueError(
+                f"Manifold training requires {path}={expected}, found {actual!r}."
+            )
+    variant = os.environ.get(
+        "LIBERO_TYPE",
+        OmegaConf.select(cfg, "env.train.libero_variant", default="standard"),
+    )
+    if variant != "standard":
+        raise ValueError(
+            f"Manifold training requires standard LIBERO, found {variant!r}."
+        )
+    if placements is not None:
+        if not all(name in placements for name in ("actor", "env", "rollout")):
+            raise ValueError(
+                "Expected actor, env and rollout placement plans for manifold validation."
+            )
+        layouts = [placements[name] for name in ("actor", "env", "rollout")]
+        if not layouts[0] or layouts[0] != layouts[1] or layouts[0] != layouts[2]:
+            raise ValueError(
+                "Manifold training requires actor, env and rollout colocated in the same rank order."
+            )
+        world_size = len(layouts[1])
+        total_envs = cfg.env.train.total_num_envs
+        if (
+            total_envs <= 0
+            or total_envs % world_size
+            or (total_envs // world_size) % cfg.algorithm.group_size
+        ):
+            raise ValueError(
+                "Manifold placement must keep complete eight-member groups in every scoring shard."
+            )
+    if score == "volume_exp_neg_dim":
+        from rlinf.algorithms.manifold.metrics import require_tle
+
+        require_tle()
+
+
 def validate_embodied_cfg(cfg):
     only_eval = (
         cfg.runner.get("only_eval", False)
@@ -1188,6 +1421,17 @@ def validate_embodied_cfg(cfg):
     component_placement = HybridComponentPlacement(cfg, Cluster())
     stage_num = cfg.rollout.pipeline_stage_num
     env_world_size = component_placement.get_world_size("env")
+    if (
+        OmegaConf.select(cfg, "algorithm.manifold.mode", default="disabled")
+        != "disabled"
+    ):
+        validate_manifold_cfg(
+            cfg,
+            placements={
+                name: component_placement.get_strategy(name).get_placement(Cluster())
+                for name in ("actor", "env", "rollout")
+            },
+        )
 
     use_reward_model = cfg.get("reward", {}).get("use_reward_model", False)
     standalone_realworld = cfg.get("reward", {}).get("standalone_realworld", False)
@@ -1715,6 +1959,7 @@ def adv_requires_group_baseline(
 
 
 def validate_cfg(cfg: DictConfig) -> DictConfig:
+    validate_manifold_cfg(cfg)
     OmegaConf.set_struct(cfg, True)
 
     with open_dict(cfg):

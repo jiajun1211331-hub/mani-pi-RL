@@ -320,6 +320,8 @@ class PolicyOutput:
     intervene_flags: torch.Tensor | None = None
     # Actor weight version per log-probability slot; shape matches prev_logprobs.
     versions: torch.Tensor | None = None
+    # Detached action-expert features, FP32 [B, C, 1024], outside replay inputs.
+    manifold_hidden: torch.Tensor | None = None
 
     def __post_init__(self) -> None:
         """Move inference outputs to contiguous CPU storage for transport."""
@@ -333,6 +335,7 @@ class PolicyOutput:
             "prev_values",
             "intervene_flags",
             "versions",
+            "manifold_hidden",
         ):
             value = getattr(self, field_name)
             if value is not None:
@@ -474,9 +477,14 @@ class EnvPart:
     final_prev_values: torch.Tensor | None = None
     # Pre-action boundary for chunk zero; tensors [B, C], otherwise ``None``.
     initial_transition: EnvTransition | None = None
+    # Episode identity and exact per-action outcomes; leaves start with [B, ...].
+    manifold_context: dict[str, torch.Tensor] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Move model-derived fields to CPU for transport."""
+        self.manifold_context = put_tensor_device(
+            self.manifold_context, "cpu", detach=True
+        )
         if self.next_obs is not None:
             self.next_obs = put_tensor_device(self.next_obs, "cpu")
         if self.next_rlt_obs is not None:
@@ -515,6 +523,7 @@ class EnvPart:
         split_sizes = split_sizes or [source.size for source in self.sources]
         source_shards = TrajectorySource.split(self.sources, split_sizes)
         transitions = self.transition.split(split_sizes)
+        manifold_contexts = split_batch_value(self.manifold_context, split_sizes)
         next_observations = split_batch_value(self.next_obs, split_sizes)
         next_rlt_observations = split_batch_value(self.next_rlt_obs, split_sizes)
         bootstrap_values = split_batch_value(self.bootstrap_values, split_sizes)
@@ -534,6 +543,7 @@ class EnvPart:
                 bootstrap_values=bootstrap_values[index],
                 final_prev_values=final_prev_values[index],
                 initial_transition=initial_transitions[index],
+                manifold_context=manifold_contexts[index],
             )
             for index in range(len(split_sizes))
         ]
@@ -563,6 +573,9 @@ class EnvPart:
             ),
             next_obs=merge_batch_values([fragment.next_obs for fragment in fragments]),
             requires_inference=fragments[0].requires_inference,
+            manifold_context=merge_batch_values(
+                [fragment.manifold_context for fragment in fragments]
+            ),
             next_rlt_obs=merge_batch_values(
                 [fragment.next_rlt_obs for fragment in fragments]
             ),
@@ -627,6 +640,8 @@ class TrajectoryStep:
     forward_inputs: dict[str, Any] = field(default_factory=dict)
     # Actor weight version for each policy statistic; shape matches prev_logprobs.
     versions: torch.Tensor | None = None
+    manifold_hidden: torch.Tensor | None = None
+    manifold_context: dict[str, torch.Tensor] = field(default_factory=dict)
     # Current transition observation; leaves start with [B, ...].
     curr_obs: dict[str, Any] = field(default_factory=dict)
     # Next transition observation; leaves start with [B, ...].
@@ -642,6 +657,11 @@ class TrajectoryStep:
 
     def __post_init__(self) -> None:
         """Normalize all retained training data to contiguous CPU storage."""
+        if self.manifold_hidden is not None:
+            self.manifold_hidden = self.manifold_hidden.detach().cpu().contiguous()
+        self.manifold_context = put_tensor_device(
+            self.manifold_context, "cpu", detach=True
+        )
         for field_name in (
             "actions",
             "intervene_flags",
@@ -688,6 +708,48 @@ class TrajectoryStep:
         output = policy.output
         if output is None:
             raise ValueError("Training trajectories require inferred policy output.")
+        context = {}
+        if output.manifold_hidden is not None:
+            if (
+                not env.manifold_context
+                or policy.sources != env.sources
+                or len(env.sources) != 1
+            ):
+                raise ValueError(
+                    "Expected manifold policy and environment data from one matching source."
+                )
+            source = env.sources[0]
+            if output.versions is None or output.versions.shape[0] != source.size:
+                raise ValueError(
+                    "Expected behavior-policy versions for every manifold member."
+                )
+            versions = output.versions.reshape(source.size, -1)
+            if (
+                not torch.isfinite(versions).all()
+                or not (versions == versions[:, :1]).all()
+                or not (versions == versions.round()).all()
+            ):
+                raise ValueError(
+                    "Expected one finite integer behavior-policy version per manifold member."
+                )
+            context = dict(env.manifold_context)
+            context.update(
+                {
+                    name: torch.full((source.size,), value, dtype=torch.int64)
+                    for name, value in (
+                        ("collector_step", source.key.step_id),
+                        ("rollout_epoch", source.key.epoch_id),
+                        ("env_rank", source.key.env_rank),
+                        ("stage_id", source.key.stage_id),
+                        ("chunk_id", source.key.chunk_id),
+                    )
+                }
+            )
+            context["policy_version"] = versions[:, 0].to(torch.int64)
+        elif env.manifold_context:
+            raise ValueError(
+                "Expected manifold features alongside environment manifold context."
+            )
         initial = env.initial_transition
         step = cls(
             actions=output.forward_inputs.get("action"),
@@ -699,6 +761,8 @@ class TrajectoryStep:
             rewards=rewards,
             forward_inputs=dict(output.forward_inputs),
             versions=output.versions,
+            manifold_hidden=output.manifold_hidden,
+            manifold_context=context,
             initial_dones=initial.dones if initial is not None else None,
             initial_truncations=(initial.truncations if initial is not None else None),
             initial_terminations=(
@@ -834,9 +898,19 @@ class Trajectory:
     prev_logprobs: torch.Tensor | None = None
     prev_values: torch.Tensor | None = None
     versions: torch.Tensor | None = None
+    manifold_hidden: torch.Tensor | None = None
+    manifold_context: dict[str, torch.Tensor] = field(default_factory=dict)
     forward_inputs: dict[str, Any] = field(default_factory=dict)
     curr_obs: dict[str, Any] = field(default_factory=dict)
     next_obs: dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        """Keep optional manifold payloads detached on CPU."""
+        if self.manifold_hidden is not None:
+            self.manifold_hidden = self.manifold_hidden.detach().cpu().contiguous()
+        self.manifold_context = put_tensor_device(
+            self.manifold_context, "cpu", detach=True
+        )
 
     @classmethod
     def from_steps(
@@ -851,6 +925,24 @@ class Trajectory:
         temporal order; ordinary fields retain one entry per action chunk.
         """
         trajectory = cls(max_episode_length=max_episode_length)
+        manifold_present = [
+            step.manifold_hidden is not None or bool(step.manifold_context)
+            for step in steps
+        ]
+        if any(manifold_present) and not all(
+            step.manifold_hidden is not None and bool(step.manifold_context)
+            for step in steps
+        ):
+            raise ValueError(
+                "Expected manifold features and context for every trajectory step."
+            )
+        if any(manifold_present) and any(
+            step.manifold_context.keys() != steps[0].manifold_context.keys()
+            for step in steps
+        ):
+            raise ValueError(
+                "Expected identical manifold context fields across trajectory steps."
+            )
 
         def stack_step_field(name: str) -> torch.Tensor | None:
             values = [getattr(step, name) for step in steps]
@@ -863,6 +955,7 @@ class Trajectory:
             "rewards",
             "prev_logprobs",
             "versions",
+            "manifold_hidden",
         ):
             setattr(trajectory, name, stack_step_field(name))
 
@@ -896,7 +989,7 @@ class Trajectory:
         if values:
             trajectory.prev_values = torch.stack(values, dim=0).cpu().contiguous()
 
-        for name in ("forward_inputs", "curr_obs", "next_obs"):
+        for name in ("forward_inputs", "curr_obs", "next_obs", "manifold_context"):
             values = [getattr(step, name) for step in steps if getattr(step, name)]
             if values:
                 setattr(
@@ -961,8 +1054,34 @@ class Trajectory:
         if not trajectories:
             return {}
 
+        manifold_present = [
+            trajectory.manifold_hidden is not None or bool(trajectory.manifold_context)
+            for trajectory in trajectories
+        ]
+        if any(manifold_present):
+            if not all(
+                trajectory.manifold_hidden is not None
+                and bool(trajectory.manifold_context)
+                for trajectory in trajectories
+            ):
+                raise ValueError(
+                    "Expected manifold features and context in every trajectory shard."
+                )
+            if any(
+                trajectory.manifold_context.keys()
+                != trajectories[0].manifold_context.keys()
+                for trajectory in trajectories
+            ):
+                raise ValueError(
+                    "Expected identical manifold context fields across trajectory shards."
+                )
         batch: dict[str, Any] = {}
-        for field_name in ("curr_obs", "next_obs", "forward_inputs"):
+        for field_name in (
+            "curr_obs",
+            "next_obs",
+            "forward_inputs",
+            "manifold_context",
+        ):
             all_keys = {
                 key
                 for trajectory in trajectories

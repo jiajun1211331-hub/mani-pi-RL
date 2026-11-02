@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+
 import numpy as np
 import torch
 from omegaconf import DictConfig, OmegaConf
@@ -19,6 +21,19 @@ from torch import nn
 
 import rlinf.algorithms  # noqa: F401
 from rlinf.algorithms.expert import build_expert_model_config
+from rlinf.algorithms.manifold.advantages import (
+    combine_advantages,
+    has_global_signal,
+    native_group_advantages,
+)
+from rlinf.algorithms.manifold.audit import ManifoldAudit
+from rlinf.algorithms.manifold.diagnostics import (
+    DiagnosticTotals,
+    aggregate_diagnostics,
+    local_diagnostics,
+    mode_diagnostics,
+)
+from rlinf.algorithms.manifold.groups import score_groups
 from rlinf.algorithms.registry import calculate_adv_and_returns, policy_loss
 from rlinf.algorithms.utils import compute_entropy_loss
 from rlinf.config import SupportedModel
@@ -78,6 +93,13 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
             self.cfg.algorithm.get("loss_agg_func", "token-mean")
         )
         self._group_success_metrics: dict[str, float] = {}
+        self.manifold_enabled = (
+            OmegaConf.select(cfg, "algorithm.manifold.mode", default="disabled")
+            != "disabled"
+        )
+        self._manifold_groups = None
+        self._manifold_advantages = None
+        self._manifold_audit = None
 
         self.enable_sft_co_train = cfg.actor.get("enable_sft_co_train", False)
         self.version = 0
@@ -119,6 +141,10 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
         if self.enable_offload:
             self.offload_param_and_grad()
             self.offload_optimizer()
+
+        from rlinf.algorithms.manifold.snapshot import verify_runtime_source
+
+        verify_runtime_source("actor")
 
     def model_provider_func(self) -> nn.Module:
         model = get_model(self.cfg.actor.model)
@@ -239,7 +265,9 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
             rollout_batch["loss_mask_sum"] = loss_mask_sum
 
         self._group_success_metrics = {}
-        if self.cfg.algorithm.get("log_group_success_metrics", False):
+        if not self.manifold_enabled and self.cfg.algorithm.get(
+            "log_group_success_metrics", False
+        ):
             self._group_success_metrics = compute_group_success_metrics(
                 rollout_batch["rewards"],
                 group_size=self.cfg.algorithm.group_size,
@@ -249,7 +277,9 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
             )
 
         # filter data by rewards
-        if self.cfg.algorithm.get("filter_rewards", False):
+        if not self.manifold_enabled and self.cfg.algorithm.get(
+            "filter_rewards", False
+        ):
             rewards = rollout_batch[
                 "rewards"
             ]  # [n_chunk_step, batch, num_action_chunks]
@@ -325,7 +355,92 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
             "advantage_mode": self.cfg.algorithm.get("advantage_mode", None),
         }
 
-        advantages_and_returns = calculate_adv_and_returns(**kwargs)
+        if self.manifold_enabled:
+            manifold_cfg = self.cfg.algorithm.manifold
+            geometry_cfg = manifold_cfg.get("geometry", {})
+            normalization_cfg = manifold_cfg.get("normalization", {})
+            if not all(
+                name in self.rollout_batch
+                for name in ("manifold_hidden", "manifold_context")
+            ):
+                raise ValueError(
+                    "Enabled manifold training requires rollout features and episode context."
+                )
+            hidden = self.rollout_batch.pop("manifold_hidden")
+            context = self.rollout_batch.pop("manifold_context")
+            hidden_bytes = hidden.numel() * hidden.element_size()
+            geometry_started = time.perf_counter()
+            self._manifold_groups = score_groups(
+                hidden.numpy(),
+                {name: value.numpy() for name, value in context.items()},
+                group_size=self.cfg.algorithm.group_size,
+                score=geometry_cfg.get("score", "volume_exp_neg_dim"),
+                k=geometry_cfg.get("tle_k", 10),
+                tle_epsilon=geometry_cfg.get("tle_epsilon", 1e-4),
+                alpha=geometry_cfg.get("alpha", 0.1),
+                normalization_epsilon=normalization_cfg.get("epsilon", 1e-6),
+                min_group_std=normalization_cfg.get("min_group_std", 1e-6),
+                dimension_diagnostics=manifold_cfg.get("diagnostics", {}).get(
+                    "dimension_metrics", False
+                ),
+            )
+            geometry_seconds = time.perf_counter() - geometry_started
+            del context
+            advantages_and_returns = native_group_advantages(
+                self._manifold_groups, **kwargs
+            )
+            self._manifold_advantages = combine_advantages(
+                advantages_and_returns["advantages"],
+                kwargs["loss_mask"],
+                self._manifold_groups,
+                mode=manifold_cfg.mode,
+                eligible_groups=manifold_cfg.get("eligible_groups", "any_success"),
+                weight=manifold_cfg.get("weight", 0.2),
+            )
+            advantages_and_returns["advantages"] = self._manifold_advantages.final
+            kwargs["loss_mask"] = self._manifold_advantages.loss_mask
+            audit_started = time.perf_counter()
+            if getattr(self, "_manifold_audit", None) is None:
+                self._manifold_audit = ManifoldAudit(self.cfg, self._rank)
+            self._manifold_audit.write_batch(
+                self._manifold_groups,
+                self._manifold_advantages,
+                hidden.numpy(),
+                iteration=self.version,
+                geometry_seconds=geometry_seconds,
+                hidden_bytes=hidden_bytes,
+            )
+            audit_seconds = time.perf_counter() - audit_started
+            del hidden
+            diagnostic_metrics = aggregate_diagnostics(
+                local_diagnostics(
+                    self._manifold_groups,
+                    self._manifold_advantages,
+                    geometry_seconds=geometry_seconds,
+                    hidden_bytes=hidden_bytes,
+                    audit_seconds=audit_seconds,
+                ),
+                Worker.torch_platform.current_device(),
+            )
+            if self.cfg.algorithm.get("log_group_success_metrics", False):
+                raw_groups = max(1.0, diagnostic_metrics["manifold/groups/raw"])
+                size = self.cfg.algorithm.group_size
+                self._group_success_metrics = {
+                    f"group_success_{count}_of_{size}_fraction": diagnostic_metrics.get(
+                        f"manifold/groups/success_{count}_of_{size}", 0.0
+                    )
+                    / raw_groups
+                    for count in range(size + 1)
+                }
+                self._group_success_metrics["group_mixed_fraction"] = (
+                    diagnostic_metrics["manifold/groups/mixed"] / raw_groups
+                )
+                self._group_success_metrics["group_filter_keep_fraction"] = (
+                    diagnostic_metrics["manifold/groups/eligible"] / raw_groups
+                )
+
+        else:
+            advantages_and_returns = calculate_adv_and_returns(**kwargs)
 
         self.rollout_batch.update(advantages_and_returns)
         if kwargs["loss_mask"] is not None:
@@ -335,6 +450,28 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
 
         rollout_metrics = compute_rollout_metrics(self.rollout_batch)
         rollout_metrics.update(self._group_success_metrics)
+        options = self.cfg.algorithm.get("manifold")
+        if options is not None:
+            rollout_metrics.update(mode_diagnostics(options))
+            if self.manifold_enabled:
+                rollout_metrics.update(diagnostic_metrics)
+            elif self.cfg.algorithm.adv_type == "grpo":
+                group_size = self.cfg.algorithm.group_size
+                local = DiagnosticTotals()
+                local.counts["groups/raw"] = (
+                    self.rollout_batch["rewards"].shape[1] // group_size
+                )
+                local.counts["groups/eligible"] = int(
+                    self.rollout_batch["loss_mask"]
+                    .any(dim=0)
+                    .reshape(-1, group_size)
+                    .any(dim=-1)
+                    .sum()
+                )
+                local.counts["hidden_bytes"] = 0
+                rollout_metrics.update(
+                    aggregate_diagnostics(local, Worker.torch_platform.current_device())
+                )
         return rollout_metrics
 
     @Worker.timer("actor/compute_opd_teacher_logprobs")
@@ -624,12 +761,20 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
         if self.cfg.algorithm.get("recompute_logprobs", False):
             append_to_dict(metrics, self.recompute_prev_logprobs(batch_size_per_rank))
         update_epoch = self.cfg.algorithm.get("update_epoch", 1)
+        performed_updates = skipped_updates = 0
         for _ in range(update_epoch):
             rollout_dataloader_iter = split_dict_to_chunk(
                 self.rollout_batch,
                 rollout_size // batch_size_per_rank,
             )
             for train_global_batch in rollout_dataloader_iter:
+                if self.manifold_enabled and not has_global_signal(
+                    train_global_batch["advantages"],
+                    train_global_batch["loss_mask"],
+                    self.device,
+                ):
+                    skipped_updates += 1
+                    continue
                 # split batch into micro_batches
                 train_global_batch_size = train_global_batch["prev_logprobs"].shape[0]
                 assert (
@@ -660,6 +805,7 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
                 self.torch_platform.empty_cache()
 
                 grad_norm, lr_list = self.optimizer_step()
+                performed_updates += int(np.isfinite(grad_norm))
                 data = {
                     "actor/grad_norm": grad_norm,
                     "actor/lr": lr_list[0],
@@ -667,8 +813,19 @@ class EmbodiedFSDPActor(FSDPModelManager, Worker):
                 if len(lr_list) > 1:
                     data["critic/lr"] = lr_list[1]
                 append_to_dict(metrics, data)
-        # put LR scheduler step here
-        self.lr_scheduler.step()
+        # Native scheduling advances once per rollout iteration that updates.
+        if not self.manifold_enabled or performed_updates > 0:
+            self.lr_scheduler.step()
+        if self.manifold_enabled:
+            metrics["manifold/optimizer_updates"] = [performed_updates]
+            metrics["manifold/optimizer_skips"] = [skipped_updates]
+        if self.manifold_enabled and getattr(self, "_manifold_audit", None) is not None:
+            self._manifold_audit.write_updates(
+                updates=performed_updates,
+                skips=skipped_updates,
+                optimizer_steps=self.optimizer_steps,
+                scheduler_advanced=performed_updates > 0,
+            )
         self.optimizer.zero_grad()
         clear_memory()
         explained_variance_stats = pop_critic_explained_variance_stats(metrics)

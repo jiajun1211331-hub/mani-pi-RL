@@ -1,0 +1,1182 @@
+{
+  "base_recipe": "libero_10_grpo_openpi_pi05",
+  "formal": {
+    "disabled": {
+      "mode": "disabled",
+      "score": "volume_exp_neg_dim",
+      "eligible_groups": "any_success",
+      "sha256": "9a8aba2b05ed1863412787e797652206edcab9d5142551ef031fbe554d2dd124",
+      "differences_from_base": {
+        "algorithm.log_group_success_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": true
+        },
+        "algorithm.manifold.diagnostics.audit_dir": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": null
+        },
+        "algorithm.manifold.diagnostics.debug_hidden_max_trajectories": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0
+        },
+        "algorithm.manifold.diagnostics.dimension_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.manifold.eligible_groups": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "any_success"
+        },
+        "algorithm.manifold.feature.denoise_step": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "last"
+        },
+        "algorithm.manifold.feature.source": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action_expert_pre_output"
+        },
+        "algorithm.manifold.feature.storage_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float32"
+        },
+        "algorithm.manifold.geometry.alpha": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.1
+        },
+        "algorithm.manifold.geometry.compute_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float64"
+        },
+        "algorithm.manifold.geometry.granularity": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action"
+        },
+        "algorithm.manifold.geometry.score": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "volume_exp_neg_dim"
+        },
+        "algorithm.manifold.geometry.tle_epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.0001
+        },
+        "algorithm.manifold.geometry.tle_k": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 10
+        },
+        "algorithm.manifold.mode": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "disabled"
+        },
+        "algorithm.manifold.normalization.epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.min_group_std": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.std_correction": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1
+        },
+        "algorithm.manifold.prefix.rule": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "min_success_actions"
+        },
+        "algorithm.manifold.prefix.update_boundary": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "full_chunk"
+        },
+        "algorithm.manifold.weight": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.2
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1"
+        }
+      }
+    },
+    "g_mixed": {
+      "mode": "task_plus_geometry",
+      "score": "volume_exp_neg_dim",
+      "eligible_groups": "any_success",
+      "sha256": "c7ec063136e4b31d9d09d9940b64fba2f1dfdcf8796157b86c0191b1c8d999c5",
+      "differences_from_base": {
+        "algorithm.log_group_success_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": true
+        },
+        "algorithm.manifold.diagnostics.audit_dir": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": null
+        },
+        "algorithm.manifold.diagnostics.debug_hidden_max_trajectories": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0
+        },
+        "algorithm.manifold.diagnostics.dimension_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.manifold.eligible_groups": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "any_success"
+        },
+        "algorithm.manifold.feature.denoise_step": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "last"
+        },
+        "algorithm.manifold.feature.source": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action_expert_pre_output"
+        },
+        "algorithm.manifold.feature.storage_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float32"
+        },
+        "algorithm.manifold.geometry.alpha": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.1
+        },
+        "algorithm.manifold.geometry.compute_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float64"
+        },
+        "algorithm.manifold.geometry.granularity": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action"
+        },
+        "algorithm.manifold.geometry.score": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "volume_exp_neg_dim"
+        },
+        "algorithm.manifold.geometry.tle_epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.0001
+        },
+        "algorithm.manifold.geometry.tle_k": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 10
+        },
+        "algorithm.manifold.mode": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "task_plus_geometry"
+        },
+        "algorithm.manifold.normalization.epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.min_group_std": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.std_correction": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1
+        },
+        "algorithm.manifold.prefix.rule": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "min_success_actions"
+        },
+        "algorithm.manifold.prefix.update_boundary": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "full_chunk"
+        },
+        "algorithm.manifold.weight": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.2
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1"
+        }
+      }
+    },
+    "g_only": {
+      "mode": "geometry_only",
+      "score": "volume_exp_neg_dim",
+      "eligible_groups": "any_success",
+      "sha256": "53cced5084f9f125b17fce03d4c1759e3b1d79a84a60883e9fc641eee5429fa5",
+      "differences_from_base": {
+        "algorithm.log_group_success_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": true
+        },
+        "algorithm.manifold.diagnostics.audit_dir": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": null
+        },
+        "algorithm.manifold.diagnostics.debug_hidden_max_trajectories": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0
+        },
+        "algorithm.manifold.diagnostics.dimension_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.manifold.eligible_groups": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "any_success"
+        },
+        "algorithm.manifold.feature.denoise_step": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "last"
+        },
+        "algorithm.manifold.feature.source": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action_expert_pre_output"
+        },
+        "algorithm.manifold.feature.storage_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float32"
+        },
+        "algorithm.manifold.geometry.alpha": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.1
+        },
+        "algorithm.manifold.geometry.compute_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float64"
+        },
+        "algorithm.manifold.geometry.granularity": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action"
+        },
+        "algorithm.manifold.geometry.score": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "volume_exp_neg_dim"
+        },
+        "algorithm.manifold.geometry.tle_epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.0001
+        },
+        "algorithm.manifold.geometry.tle_k": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 10
+        },
+        "algorithm.manifold.mode": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "geometry_only"
+        },
+        "algorithm.manifold.normalization.epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.min_group_std": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.std_correction": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1
+        },
+        "algorithm.manifold.prefix.rule": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "min_success_actions"
+        },
+        "algorithm.manifold.prefix.update_boundary": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "full_chunk"
+        },
+        "algorithm.manifold.weight": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.2
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1"
+        }
+      }
+    },
+    "v_mixed": {
+      "mode": "task_plus_geometry",
+      "score": "volume",
+      "eligible_groups": "any_success",
+      "sha256": "b0209ca7a213231748426c2c40df71b2ea16ea4412f0dbaa85461e083f95519c",
+      "differences_from_base": {
+        "algorithm.log_group_success_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": true
+        },
+        "algorithm.manifold.diagnostics.audit_dir": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": null
+        },
+        "algorithm.manifold.diagnostics.debug_hidden_max_trajectories": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0
+        },
+        "algorithm.manifold.diagnostics.dimension_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.manifold.eligible_groups": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "any_success"
+        },
+        "algorithm.manifold.feature.denoise_step": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "last"
+        },
+        "algorithm.manifold.feature.source": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action_expert_pre_output"
+        },
+        "algorithm.manifold.feature.storage_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float32"
+        },
+        "algorithm.manifold.geometry.alpha": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.1
+        },
+        "algorithm.manifold.geometry.compute_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float64"
+        },
+        "algorithm.manifold.geometry.granularity": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action"
+        },
+        "algorithm.manifold.geometry.score": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "volume"
+        },
+        "algorithm.manifold.geometry.tle_epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.0001
+        },
+        "algorithm.manifold.geometry.tle_k": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 10
+        },
+        "algorithm.manifold.mode": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "task_plus_geometry"
+        },
+        "algorithm.manifold.normalization.epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.min_group_std": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.std_correction": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1
+        },
+        "algorithm.manifold.prefix.rule": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "min_success_actions"
+        },
+        "algorithm.manifold.prefix.update_boundary": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "full_chunk"
+        },
+        "algorithm.manifold.weight": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.2
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1"
+        }
+      }
+    },
+    "v_only": {
+      "mode": "geometry_only",
+      "score": "volume",
+      "eligible_groups": "any_success",
+      "sha256": "49f1ae5d595e40e01ee410dadad2259a7e97106551142b26ca782d79ba23b3bb",
+      "differences_from_base": {
+        "algorithm.log_group_success_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": true
+        },
+        "algorithm.manifold.diagnostics.audit_dir": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": null
+        },
+        "algorithm.manifold.diagnostics.debug_hidden_max_trajectories": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0
+        },
+        "algorithm.manifold.diagnostics.dimension_metrics": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.manifold.eligible_groups": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "any_success"
+        },
+        "algorithm.manifold.feature.denoise_step": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "last"
+        },
+        "algorithm.manifold.feature.source": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action_expert_pre_output"
+        },
+        "algorithm.manifold.feature.storage_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float32"
+        },
+        "algorithm.manifold.geometry.alpha": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.1
+        },
+        "algorithm.manifold.geometry.compute_dtype": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "float64"
+        },
+        "algorithm.manifold.geometry.granularity": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "action"
+        },
+        "algorithm.manifold.geometry.score": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "volume"
+        },
+        "algorithm.manifold.geometry.tle_epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.0001
+        },
+        "algorithm.manifold.geometry.tle_k": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 10
+        },
+        "algorithm.manifold.mode": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "geometry_only"
+        },
+        "algorithm.manifold.normalization.epsilon": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.min_group_std": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1e-06
+        },
+        "algorithm.manifold.normalization.std_correction": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 1
+        },
+        "algorithm.manifold.prefix.rule": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "min_success_actions"
+        },
+        "algorithm.manifold.prefix.update_boundary": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": "full_chunk"
+        },
+        "algorithm.manifold.weight": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": 0.2
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1"
+        }
+      }
+    }
+  },
+  "smoke": {
+    "disabled": {
+      "sha256": "e8d46805cb69eb78a769dcf5f60f9e0ba86d67819a573778136cc68479c05a33",
+      "differences_from_formal": {
+        "actor.global_batch_size": {
+          "base_present": true,
+          "base": 2048,
+          "actual_present": true,
+          "actual": 32
+        },
+        "actor.micro_batch_size": {
+          "base_present": true,
+          "base": 128,
+          "actual_present": true,
+          "actual": 2
+        },
+        "actor.model.openpi.torch_compile": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.update_epoch": {
+          "base_present": true,
+          "base": 4,
+          "actual_present": true,
+          "actual": 1
+        },
+        "cluster.component_placement.actor,env,rollout": {
+          "base_present": true,
+          "base": "all",
+          "actual_present": true,
+          "actual": "0-1"
+        },
+        "env.eval.total_num_envs": {
+          "base_present": true,
+          "base": 500,
+          "actual_present": true,
+          "actual": 2
+        },
+        "env.eval.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "env.train.rollout_epoch": {
+          "base_present": true,
+          "base": 8,
+          "actual_present": true,
+          "actual": 1
+        },
+        "env.train.total_num_envs": {
+          "base_present": true,
+          "base": 64,
+          "actual_present": true,
+          "actual": 16
+        },
+        "env.train.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "rollout.enable_torch_compile": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05_mani_v1",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1_smoke"
+        },
+        "runner.max_epochs": {
+          "base_present": true,
+          "base": 1000,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.save_interval": {
+          "base_present": true,
+          "base": 40,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.val_check_interval": {
+          "base_present": true,
+          "base": -1,
+          "actual_present": true,
+          "actual": 1
+        }
+      }
+    },
+    "g_mixed": {
+      "sha256": "f617d06cc06754b2138ef19a7e2e4b3bf72e29362343fe79aada5649a5307558",
+      "differences_from_formal": {
+        "actor.global_batch_size": {
+          "base_present": true,
+          "base": 2048,
+          "actual_present": true,
+          "actual": 32
+        },
+        "actor.micro_batch_size": {
+          "base_present": true,
+          "base": 128,
+          "actual_present": true,
+          "actual": 2
+        },
+        "actor.model.openpi.torch_compile": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.update_epoch": {
+          "base_present": true,
+          "base": 4,
+          "actual_present": true,
+          "actual": 1
+        },
+        "cluster.component_placement.actor,env,rollout": {
+          "base_present": true,
+          "base": "all",
+          "actual_present": true,
+          "actual": "0-1"
+        },
+        "env.eval.total_num_envs": {
+          "base_present": true,
+          "base": 500,
+          "actual_present": true,
+          "actual": 2
+        },
+        "env.eval.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "env.train.rollout_epoch": {
+          "base_present": true,
+          "base": 8,
+          "actual_present": true,
+          "actual": 1
+        },
+        "env.train.total_num_envs": {
+          "base_present": true,
+          "base": 64,
+          "actual_present": true,
+          "actual": 16
+        },
+        "env.train.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "rollout.enable_torch_compile": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05_mani_v1",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1_smoke"
+        },
+        "runner.max_epochs": {
+          "base_present": true,
+          "base": 1000,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.save_interval": {
+          "base_present": true,
+          "base": 40,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.val_check_interval": {
+          "base_present": true,
+          "base": -1,
+          "actual_present": true,
+          "actual": 1
+        }
+      }
+    },
+    "g_only": {
+      "sha256": "e6a3532ba0b1dddbf757bd20c6b7039148b2d149284f10580f4009bab5262998",
+      "differences_from_formal": {
+        "actor.global_batch_size": {
+          "base_present": true,
+          "base": 2048,
+          "actual_present": true,
+          "actual": 32
+        },
+        "actor.micro_batch_size": {
+          "base_present": true,
+          "base": 128,
+          "actual_present": true,
+          "actual": 2
+        },
+        "actor.model.openpi.torch_compile": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.update_epoch": {
+          "base_present": true,
+          "base": 4,
+          "actual_present": true,
+          "actual": 1
+        },
+        "cluster.component_placement.actor,env,rollout": {
+          "base_present": true,
+          "base": "all",
+          "actual_present": true,
+          "actual": "0-1"
+        },
+        "env.eval.total_num_envs": {
+          "base_present": true,
+          "base": 500,
+          "actual_present": true,
+          "actual": 2
+        },
+        "env.eval.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "env.train.rollout_epoch": {
+          "base_present": true,
+          "base": 8,
+          "actual_present": true,
+          "actual": 1
+        },
+        "env.train.total_num_envs": {
+          "base_present": true,
+          "base": 64,
+          "actual_present": true,
+          "actual": 16
+        },
+        "env.train.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "rollout.enable_torch_compile": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05_mani_v1",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1_smoke"
+        },
+        "runner.max_epochs": {
+          "base_present": true,
+          "base": 1000,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.save_interval": {
+          "base_present": true,
+          "base": 40,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.val_check_interval": {
+          "base_present": true,
+          "base": -1,
+          "actual_present": true,
+          "actual": 1
+        }
+      }
+    },
+    "v_mixed": {
+      "sha256": "e359a20e1540e09a53c72a5804de402ae2058b5e0a3601b0fb122d5bbbf9aefd",
+      "differences_from_formal": {
+        "actor.global_batch_size": {
+          "base_present": true,
+          "base": 2048,
+          "actual_present": true,
+          "actual": 32
+        },
+        "actor.micro_batch_size": {
+          "base_present": true,
+          "base": 128,
+          "actual_present": true,
+          "actual": 2
+        },
+        "actor.model.openpi.torch_compile": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.update_epoch": {
+          "base_present": true,
+          "base": 4,
+          "actual_present": true,
+          "actual": 1
+        },
+        "cluster.component_placement.actor,env,rollout": {
+          "base_present": true,
+          "base": "all",
+          "actual_present": true,
+          "actual": "0-1"
+        },
+        "env.eval.total_num_envs": {
+          "base_present": true,
+          "base": 500,
+          "actual_present": true,
+          "actual": 2
+        },
+        "env.eval.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "env.train.rollout_epoch": {
+          "base_present": true,
+          "base": 8,
+          "actual_present": true,
+          "actual": 1
+        },
+        "env.train.total_num_envs": {
+          "base_present": true,
+          "base": 64,
+          "actual_present": true,
+          "actual": 16
+        },
+        "env.train.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "rollout.enable_torch_compile": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05_mani_v1",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1_smoke"
+        },
+        "runner.max_epochs": {
+          "base_present": true,
+          "base": 1000,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.save_interval": {
+          "base_present": true,
+          "base": 40,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.val_check_interval": {
+          "base_present": true,
+          "base": -1,
+          "actual_present": true,
+          "actual": 1
+        }
+      }
+    },
+    "v_only": {
+      "sha256": "259e1e785fedb929104539d872cd9f9c3a02f995a6b2dee1d2cd4e67a8bc231f",
+      "differences_from_formal": {
+        "actor.global_batch_size": {
+          "base_present": true,
+          "base": 2048,
+          "actual_present": true,
+          "actual": 32
+        },
+        "actor.micro_batch_size": {
+          "base_present": true,
+          "base": 128,
+          "actual_present": true,
+          "actual": 2
+        },
+        "actor.model.openpi.torch_compile": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "algorithm.update_epoch": {
+          "base_present": true,
+          "base": 4,
+          "actual_present": true,
+          "actual": 1
+        },
+        "cluster.component_placement.actor,env,rollout": {
+          "base_present": true,
+          "base": "all",
+          "actual_present": true,
+          "actual": "0-1"
+        },
+        "env.eval.total_num_envs": {
+          "base_present": true,
+          "base": 500,
+          "actual_present": true,
+          "actual": 2
+        },
+        "env.eval.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "env.train.rollout_epoch": {
+          "base_present": true,
+          "base": 8,
+          "actual_present": true,
+          "actual": 1
+        },
+        "env.train.total_num_envs": {
+          "base_present": true,
+          "base": 64,
+          "actual_present": true,
+          "actual": 16
+        },
+        "env.train.video_cfg.save_video": {
+          "base_present": true,
+          "base": true,
+          "actual_present": true,
+          "actual": false
+        },
+        "rollout.enable_torch_compile": {
+          "base_present": false,
+          "base": null,
+          "actual_present": true,
+          "actual": false
+        },
+        "runner.logger.experiment_name": {
+          "base_present": true,
+          "base": "libero_10_grpo_openpi_pi05_mani_v1",
+          "actual_present": true,
+          "actual": "libero_10_grpo_openpi_pi05_mani_v1_smoke"
+        },
+        "runner.max_epochs": {
+          "base_present": true,
+          "base": 1000,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.save_interval": {
+          "base_present": true,
+          "base": 40,
+          "actual_present": true,
+          "actual": 1
+        },
+        "runner.val_check_interval": {
+          "base_present": true,
+          "base": -1,
+          "actual_present": true,
+          "actual": 1
+        }
+      }
+    }
+  }
+}

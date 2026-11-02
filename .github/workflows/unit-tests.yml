@@ -67,6 +67,11 @@ jobs:
               [ $code -eq 0 ] || exit $code
           done
 
+      - name: Verify frozen training launchers
+        run: |
+          source .venv/bin/activate
+          pytest tests/test_pi_rl_training.py
+
   unit-tests-rocm:
     runs-on: rocm
     steps:

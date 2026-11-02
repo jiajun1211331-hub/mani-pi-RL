@@ -1262,3 +1262,318 @@ def test_process_that_built_a_cluster_keeps_its_exit_code():
     )
 
     assert result.returncode == 3, result.stderr
+
+
+@pytest.fixture
+def manifold_config(monkeypatch):
+    from hydra import compose, initialize_config_dir
+
+    config_dir = Path(__file__).resolve().parents[2] / "examples/embodiment/config"
+    monkeypatch.setenv("EMBODIED_PATH", str(config_dir.parent))
+    monkeypatch.setenv("LIBERO_TYPE", "standard")
+    with initialize_config_dir(config_dir=str(config_dir), version_base="1.1"):
+        cfg = compose(config_name="libero_10_grpo_openpi_pi05")
+    OmegaConf.update(
+        cfg,
+        "algorithm.manifold",
+        {"mode": "task_plus_geometry", "geometry": {"score": "volume"}},
+        force_add=True,
+    )
+    return cfg
+
+
+@pytest.mark.parametrize("mode", ["disabled", "task_plus_geometry", "geometry_only"])
+def test_manifold_config_validation_preserves_user_values(manifold_config, mode):
+    from rlinf.config import validate_manifold_cfg
+
+    manifold_config.algorithm.manifold.mode = mode
+    before = OmegaConf.to_container(manifold_config, resolve=True)
+    validate_manifold_cfg(manifold_config)
+    assert OmegaConf.to_container(manifold_config, resolve=True) == before
+
+
+@pytest.mark.parametrize(
+    ("path", "value"),
+    [
+        ("algorithm.manifold.mode", "mixed"),
+        ("algorithm.manifold.eligible_groups", "quota"),
+        ("algorithm.manifold.geometry.score", "dimension"),
+        ("algorithm.manifold.geometry.scroe", "volume"),
+        ("algorithm.manifold.feature.source", "vlm"),
+        ("algorithm.manifold.feature.denoise_step", "first"),
+        ("algorithm.manifold.feature.storage_dtype", "bfloat16"),
+        ("algorithm.manifold.geometry.granularity", "chunk"),
+        ("algorithm.manifold.geometry.compute_dtype", "float32"),
+        ("algorithm.manifold.geometry.tle_k", 0),
+        ("algorithm.manifold.geometry.alpha", float("nan")),
+        ("algorithm.manifold.weight", -0.1),
+        ("algorithm.manifold.weight", True),
+        ("algorithm.manifold.normalization.epsilon", 0),
+        ("algorithm.manifold.normalization.std_correction", 0),
+        ("algorithm.manifold.prefix.rule", "mean_success_actions"),
+        ("algorithm.manifold.prefix.update_boundary", "partial_chunk"),
+        ("runner.enable_decoupled_mode", True),
+        ("runner.use_training_pipeline", True),
+        ("actor.training_backend", "megatron"),
+        ("actor.model.model_type", "openvla"),
+        ("actor.model.pi05", False),
+        ("actor.model.num_action_chunks", 5),
+        ("actor.model.num_steps", 2),
+        ("actor.model.openpi.noise_method", "flow_ode"),
+        ("actor.model.openpi.train_expert_only", False),
+        ("rollout.pipeline_stage_num", 2),
+        ("algorithm.adv_type", "gae"),
+        ("algorithm.group_size", 4),
+        ("algorithm.reward_type", "action_level"),
+        ("algorithm.logprob_type", "token_level"),
+        ("env.train.auto_reset", True),
+        ("env.train.ignore_terminations", True),
+        ("env.train.use_fixed_reset_state_ids", False),
+        ("env.train.group_size", 4),
+        ("env.train.use_step_penalty", True),
+        ("algorithm.entropy_bonus", 0.1),
+        ("reward.use_reward_model", True),
+        ("actor.enable_sft_co_train", True),
+    ],
+)
+def test_manifold_config_rejects_unsupported_settings(manifold_config, path, value):
+    from rlinf.config import validate_manifold_cfg
+
+    OmegaConf.update(manifold_config, path, value, force_add=True)
+    with pytest.raises(ValueError, match="manifold|Manifold|Unknown"):
+        validate_manifold_cfg(manifold_config)
+
+
+def test_manifold_config_disabled_loads_no_optional_tle(manifold_config, monkeypatch):
+    import importlib.metadata
+
+    from rlinf.config import validate_manifold_cfg
+
+    manifold_config.algorithm.manifold.geometry.score = "volume_exp_neg_dim"
+    manifold_config.algorithm.manifold.mode = "disabled"
+
+    def unavailable(name):
+        raise importlib.metadata.PackageNotFoundError(name)
+
+    monkeypatch.setattr(importlib.metadata, "version", unavailable)
+    validate_manifold_cfg(manifold_config)
+    manifold_config.algorithm.manifold.mode = "task_plus_geometry"
+    with pytest.raises(ImportError, match="scikit-dimension==0.3.7"):
+        validate_manifold_cfg(manifold_config)
+
+
+def test_manifold_config_rejects_async_entrypoint(manifold_config):
+    from rlinf.config import validate_manifold_cfg
+
+    with pytest.raises(ValueError, match="synchronous"):
+        validate_manifold_cfg(manifold_config, synchronous=False)
+
+
+def test_manifold_placement_keeps_complete_groups_on_colocated_ranks(manifold_config):
+    from dataclasses import replace
+
+    from rlinf.config import validate_manifold_cfg
+    from rlinf.scheduler.placement import Placement
+
+    layout = [
+        Placement(
+            rank=rank,
+            cluster_node_rank=0,
+            placement_node_rank=0,
+            local_accelerator_rank=rank,
+            accelerator_type=AcceleratorType.NV_GPU,
+            local_rank=rank,
+            local_world_size=2,
+            visible_accelerators=["0", "1"],
+            isolate_accelerator=False,
+            local_hardware_ranks=[rank],
+            node_group_label="default",
+        )
+        for rank in range(2)
+    ]
+    plans = {name: list(layout) for name in ("actor", "env", "rollout")}
+    validate_manifold_cfg(manifold_config, placements=plans)
+    plans["rollout"] = [replace(layout[0], cluster_node_rank=1), layout[1]]
+    with pytest.raises(ValueError, match="colocated"):
+        validate_manifold_cfg(manifold_config, placements=plans)
+    plans["rollout"] = list(reversed(layout))
+    with pytest.raises(ValueError, match="rank order"):
+        validate_manifold_cfg(manifold_config, placements=plans)
+    plans["rollout"] = list(layout)
+    manifold_config.env.train.total_num_envs = 8
+    with pytest.raises(ValueError, match="complete eight-member"):
+        validate_manifold_cfg(manifold_config, placements=plans)
+    manifold_config.env.train.total_num_envs = 16
+    validate_manifold_cfg(manifold_config, placements=plans)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("dimension_metrics", "true"),
+        ("debug_hidden_max_trajectories", -1),
+        ("debug_hidden_max_trajectories", 1.5),
+        ("debug_hidden_max_trajectories", True),
+        ("audit_dir", 12),
+        ("debug_hidden_max_groups", 1),
+    ],
+)
+def test_manifold_diagnostic_config_rejects_invalid_values(
+    manifold_config, field, value
+):
+    from rlinf.config import validate_manifold_cfg
+
+    OmegaConf.update(
+        manifold_config,
+        f"algorithm.manifold.diagnostics.{field}",
+        value,
+        force_add=True,
+    )
+    with pytest.raises(ValueError, match="diagnostics"):
+        validate_manifold_cfg(manifold_config)
+
+
+def test_volume_diagnostic_request_keeps_tle_optional(manifold_config, monkeypatch):
+    import importlib.metadata
+
+    from rlinf.config import validate_manifold_cfg
+
+    OmegaConf.update(
+        manifold_config,
+        "algorithm.manifold.diagnostics.dimension_metrics",
+        True,
+        force_add=True,
+    )
+
+    def unavailable(name):
+        raise importlib.metadata.PackageNotFoundError(name)
+
+    monkeypatch.setattr(importlib.metadata, "version", unavailable)
+    validate_manifold_cfg(manifold_config)
+
+
+@pytest.mark.parametrize(
+    ("mode", "score"),
+    [
+        ("disabled", "volume_exp_neg_dim"),
+        ("task_plus_geometry", "volume_exp_neg_dim"),
+        ("geometry_only", "volume_exp_neg_dim"),
+        ("task_plus_geometry", "volume"),
+        ("geometry_only", "volume"),
+    ],
+)
+@pytest.mark.parametrize("eligible", ["mixed_only", "any_success"])
+def test_manifold_recipe_preserves_native_training_budget(
+    monkeypatch, tmp_path, mode, score, eligible
+):
+    from hydra import compose, initialize_config_dir
+
+    from rlinf.config import validate_manifold_cfg
+
+    root = Path(__file__).resolve().parents[2] / "examples/embodiment"
+    monkeypatch.setenv("EMBODIED_PATH", str(root))
+    monkeypatch.setenv("LIBERO_TYPE", "standard")
+    with initialize_config_dir(config_dir=str(root / "config"), version_base="1.1"):
+        baseline = compose(config_name="libero_10_grpo_openpi_pi05")
+        cfg = compose(
+            config_name="libero_10_grpo_openpi_pi05_mani_v1",
+            overrides=[
+                f"algorithm.manifold.mode={mode}",
+                f"algorithm.manifold.geometry.score={score}",
+                f"algorithm.manifold.eligible_groups={eligible}",
+            ],
+        )
+    reference = OmegaConf.to_container(baseline, resolve=True)
+    actual = OmegaConf.to_container(cfg, resolve=True)
+    actual["algorithm"].pop("manifold")
+    assert actual["algorithm"].pop("log_group_success_metrics") is True
+    actual["runner"]["logger"]["experiment_name"] = reference["runner"]["logger"][
+        "experiment_name"
+    ]
+    assert actual == reference
+    assert cfg.env.train.total_num_envs * cfg.env.train.rollout_epoch == 512
+    assert cfg.algorithm.group_size == cfg.env.train.group_size == 8
+    assert cfg.actor.model.num_action_chunks == 10
+    assert (
+        cfg.env.train.max_episode_steps
+        == cfg.env.train.max_steps_per_rollout_epoch
+        == 480
+    )
+    assert cfg.actor.model.num_steps == 4
+    assert cfg.algorithm.update_epoch == 4
+    assert (cfg.actor.micro_batch_size, cfg.actor.global_batch_size) == (128, 2048)
+    assert cfg.algorithm.manifold.weight == 0.2
+    if mode != "disabled" and score == "volume_exp_neg_dim":
+        pytest.importorskip("skdim")
+    validate_manifold_cfg(cfg)
+    destination = tmp_path / "resolved.yaml"
+    OmegaConf.save(cfg, destination, resolve=True)
+    assert OmegaConf.to_container(
+        OmegaConf.load(destination)
+    ) == OmegaConf.to_container(cfg, resolve=True)
+
+
+def test_manifold_smoke_keeps_complete_groups_and_chunk_batch_divisibility(monkeypatch):
+    from hydra import compose, initialize_config_dir
+
+    from rlinf.config import validate_manifold_cfg
+
+    root = Path(__file__).resolve().parents[2] / "examples/embodiment"
+    monkeypatch.setenv("EMBODIED_PATH", str(root))
+    monkeypatch.setenv("LIBERO_TYPE", "standard")
+    with initialize_config_dir(config_dir=str(root / "config"), version_base="1.1"):
+        cfg = compose(
+            config_name="libero_10_grpo_openpi_pi05_mani_v1_smoke",
+            overrides=["algorithm.manifold.geometry.score=volume"],
+        )
+    validate_manifold_cfg(cfg)
+    world_size = 2
+    assert cfg.cluster.component_placement["actor,env,rollout"] == "0-1"
+    assert cfg.env.train.total_num_envs == 16
+    assert cfg.env.train.total_num_envs // world_size % cfg.algorithm.group_size == 0
+    assert cfg.env.train.rollout_epoch == 1
+    assert cfg.actor.global_batch_size % (world_size * cfg.actor.micro_batch_size) == 0
+    chunks = (
+        cfg.env.train.total_num_envs
+        * cfg.env.train.rollout_epoch
+        * cfg.env.train.max_steps_per_rollout_epoch
+        // cfg.actor.model.num_action_chunks
+    )
+    assert chunks % cfg.actor.global_batch_size == 0
+    assert (
+        cfg.runner.max_epochs
+        == cfg.runner.save_interval
+        == cfg.runner.val_check_interval
+        == 1
+    )
+    assert (
+        cfg.env.train.max_steps_per_rollout_epoch
+        == cfg.env.eval.max_steps_per_rollout_epoch
+        == 480
+    )
+    assert not cfg.actor.model.openpi.torch_compile
+    assert not cfg.rollout.enable_torch_compile
+
+
+@pytest.mark.parametrize(
+    "override",
+    [
+        "algorithm.manifold.mode=mixed",
+        "algorithm.manifold.geometry.score=dimension",
+        "env.train.auto_reset=true",
+    ],
+)
+def test_manifold_recipe_rejects_incompatible_overrides(monkeypatch, override):
+    from hydra import compose, initialize_config_dir
+
+    from rlinf.config import validate_manifold_cfg
+
+    root = Path(__file__).resolve().parents[2] / "examples/embodiment"
+    monkeypatch.setenv("EMBODIED_PATH", str(root))
+    with initialize_config_dir(config_dir=str(root / "config"), version_base="1.1"):
+        cfg = compose(
+            config_name="libero_10_grpo_openpi_pi05_mani_v1",
+            overrides=["algorithm.manifold.geometry.score=volume", override],
+        )
+    with pytest.raises(ValueError, match="manifold|Manifold"):
+        validate_manifold_cfg(cfg)

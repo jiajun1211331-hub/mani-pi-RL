@@ -1,0 +1,2 @@
+# Optional TLE dependency for manifold G scoring; volume scoring needs no extra.
+scikit-dimension==0.3.7

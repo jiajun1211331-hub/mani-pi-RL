@@ -23,6 +23,7 @@ import pickle
 import random
 import shutil
 import time
+from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
@@ -77,7 +78,10 @@ from rlinf.scheduler.cluster.utils import (
     unpack_dataclass_tensors,
 )
 from rlinf.utils.env_helpers import SmoothInterveneController
-from rlinf.utils.nested_dict_process import split_dict_to_chunk
+from rlinf.utils.nested_dict_process import (
+    process_nested_dict_for_adv,
+    split_dict_to_chunk,
+)
 from rlinf.utils.obs_compression import (
     _CODEC_KEY,
     compress_obs,
@@ -3610,3 +3614,185 @@ def test_reward_loaders_accept_one_batch_per_rank(tmp_path):
 
     assert len(train_loader) == 1
     assert len(val_loader) == 1
+
+
+def _manifold_parts(epoch=0, chunk=0):
+    size, actions = 16, 10
+    key = TrajectoryKey(31, epoch, 2, 0, chunk)
+    source = TrajectorySource(key, size)
+    members = torch.arange(size)
+    labels = members.float() + epoch * 1000 + chunk * 100
+    hidden = (
+        labels[:, None, None] * 10000
+        + torch.arange(actions)[None, :, None] * 1024
+        + torch.arange(1024)[None, None, :]
+    ).requires_grad_()
+    policy = PolicyPart(
+        sources=[source],
+        obs={},
+        output=PolicyOutput(
+            forward_inputs={"action": torch.zeros(size, actions * 7)},
+            prev_logprobs=torch.zeros(size, actions, 7),
+            versions=torch.full((size, actions, 7), 9.0),
+            manifold_hidden=hidden * 2,
+        ),
+    )
+    dones = torch.zeros(size, actions, dtype=torch.bool)
+    dones[0, 3] = True
+    context = {
+        "task_id": members // 8,
+        "trial_id": torch.full((size,), 4, dtype=torch.int64),
+        "reset_state_id": members // 8 * 50 + 4,
+        "group_slot": members // 8,
+        "member_id": members % 8,
+        "action_dones": dones,
+        "action_successes": dones.clone(),
+        "action_valid": (dones.long().cumsum(1) - dones.long()) == 0,
+    }
+    env = EnvPart(
+        sources=[source],
+        transition=EnvTransition(
+            rewards=torch.zeros(size, actions),
+            dones=dones,
+            terminations=dones.clone(),
+            truncations=torch.zeros_like(dones),
+        ),
+        manifold_context=context,
+        initial_transition=EnvTransition(dones=torch.zeros_like(dones))
+        if chunk == 0
+        else None,
+    )
+    return policy, env
+
+
+def _manifold_step(policy, env):
+    return TrajectoryStep.from_parts(
+        policy,
+        env,
+        rewards=env.transition.rewards,
+        collect_prev_infos=True,
+        collect_transitions=False,
+        enable_rlt=False,
+        include_final_value=False,
+    )
+
+
+def test_manifold_transport_preserves_features_and_identity_through_epoch_reorder():
+    direct = Trajectory(
+        manifold_hidden=torch.ones(1, 1, 10, 1024, requires_grad=True) * 2,
+        manifold_context={"member_id": torch.zeros(1, 1, dtype=torch.int64)},
+    )
+    assert not direct.manifold_hidden.requires_grad
+    assert direct.manifold_hidden.grad_fn is None
+    assert direct.manifold_hidden.device.type == "cpu"
+    steps = []
+    for epoch in range(2):
+        for chunk in range(3):
+            policy, env = _manifold_parts(epoch, chunk)
+            # Route each source through uneven fragments before joining it.
+            policy = PolicyPart.merge(
+                [
+                    PolicyPart(sources=sources, obs={}, output=output)
+                    for sources, output in zip(
+                        TrajectorySource.split(policy.sources, [3, 5, 8]),
+                        policy.output.split([3, 5, 8]),
+                        strict=True,
+                    )
+                ]
+            )
+            env = EnvPart.merge(env.split([3, 5, 8])).complete(
+                next_obs=None, next_rlt_obs=None
+            )
+            steps.append(_manifold_step(policy, env))
+    trajectory = Trajectory.from_steps(steps)
+    batch = Trajectory.to_batch(trajectory.split([8, 8]))
+    reordered = process_nested_dict_for_adv(batch, rollout_epoch=2)
+    hidden = reordered["manifold_hidden"]
+    context = reordered["manifold_context"]
+    assert hidden.shape == (3, 32, 10, 1024)
+    assert hidden.device.type == "cpu" and hidden.dtype == torch.float32
+    assert not hidden.requires_grad and hidden.grad_fn is None
+    for epoch in range(2):
+        for chunk in range(3):
+            for member in range(16):
+                column = epoch * 16 + member
+                expected = 2 * (
+                    (epoch * 1000 + chunk * 100 + member) * 10000
+                    + torch.arange(10)[:, None] * 1024
+                    + torch.arange(1024)[None, :]
+                )
+                torch.testing.assert_close(
+                    hidden[chunk, column], expected.float(), rtol=0, atol=0
+                )
+                assert context["rollout_epoch"][chunk, column] == epoch
+                assert context["chunk_id"][chunk, column] == chunk
+                assert context["group_slot"][chunk, column] == member // 8
+                assert context["member_id"][chunk, column] == member % 8
+    for name, value in {
+        "collector_step": 31,
+        "env_rank": 2,
+        "stage_id": 0,
+        "policy_version": 9,
+    }.items():
+        assert (context[name] == value).all()
+    assert context["action_dones"][0, 0].tolist() == [False] * 3 + [True] + [False] * 6
+    assert context["action_valid"][0, 0].tolist() == [True] * 4 + [False] * 6
+    assert "manifold_hidden" not in reordered["forward_inputs"]
+    assert "manifold_context" not in reordered["forward_inputs"]
+    assert reordered["dones"].shape == (4, 32, 10)
+
+
+@pytest.mark.parametrize("mismatch", ["source", "context", "version", "features"])
+def test_manifold_step_rejects_inconsistent_policy_and_environment(mismatch):
+    policy, env = _manifold_parts()
+    if mismatch == "source":
+        env.sources = [TrajectorySource(TrajectoryKey(32, 0, 2, 0, 0), 16)]
+    elif mismatch == "context":
+        env.manifold_context = {}
+    elif mismatch == "version":
+        policy.output.versions[0, 1, 0] = 10
+    else:
+        policy.output.manifold_hidden = None
+    with pytest.raises(ValueError, match="manifold|behavior-policy"):
+        _manifold_step(policy, env)
+
+
+def test_manifold_trajectory_rejects_partial_optional_payload():
+    policy, env = _manifold_parts()
+    step = _manifold_step(policy, env)
+    with pytest.raises(ValueError, match="every trajectory step"):
+        Trajectory.from_steps([step, replace(step, manifold_hidden=None)])
+    complete = Trajectory.from_steps([step])
+    legacy = Trajectory(actions=torch.zeros(1, 16, 70))
+    with pytest.raises(ValueError, match="every trajectory shard"):
+        Trajectory.to_batch([legacy, complete])
+    with pytest.raises(ValueError, match="every trajectory shard"):
+        Trajectory.to_batch([complete, legacy])
+    assert "manifold_hidden" not in Trajectory.to_batch([legacy])
+    assert "manifold_context" not in Trajectory.to_batch([legacy])
+
+
+def test_rollout_policy_output_forwards_optional_manifold_features():
+    worker = object.__new__(MultiStepRolloutWorker)
+    worker.enable_dagger = False
+    worker.collect_prev_infos = True
+    worker.version = 13
+    features = torch.ones(8, 10, 1024, requires_grad=True) * 3
+    result = {
+        "prev_logprobs": torch.zeros(8, 10, 7),
+        "prev_values": torch.zeros(8, 1),
+        "forward_inputs": {"action": torch.zeros(8, 70)},
+        "manifold_hidden": features,
+    }
+    output = worker._build_policy_output(torch.zeros(8, 10, 7), result)
+    torch.testing.assert_close(output.manifold_hidden, features)
+    assert not output.manifold_hidden.requires_grad
+    assert output.manifold_hidden.grad_fn is None
+    assert output.manifold_hidden.device.type == "cpu"
+    assert "manifold_hidden" not in output.forward_inputs
+    assert (output.versions == 13).all()
+    del result["manifold_hidden"]
+    assert (
+        worker._build_policy_output(torch.zeros(8, 10, 7), result).manifold_hidden
+        is None
+    )

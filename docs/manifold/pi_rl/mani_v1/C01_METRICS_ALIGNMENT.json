@@ -1,0 +1,118 @@
+{
+  "legacy_source_sha256": "c3a79ae07f75948d24c4d9834de834f694610e1721cf13ca9e92822c8aad3644",
+  "rtol": 1e-12,
+  "atol": 1e-12,
+  "max_absolute_error": {
+    "D": 0.0,
+    "V": 0.0,
+    "R": 0.0,
+    "G": 0.0
+  },
+  "records": [
+    {
+      "path": "experiments/pi_rl/pi05_sft_libero10_tasks129_mani_ode480_20261102T073519Z/task1/rollouts/trial00/attempt_001/trajectory.npz",
+      "sha256": "b2f1de09c96ba0ae30c70717b09622e6e9cf96c7bb0479938206f2a24c3bac8c",
+      "shape": [
+        250,
+        1024
+      ],
+      "status": "valid",
+      "absolute_errors": {
+        "D": 0.0,
+        "V": 0.0,
+        "R": 0.0,
+        "G": 0.0
+      }
+    },
+    {
+      "path": "experiments/pi_rl/pi05_sft_libero10_tasks129_mani_ode480_20261102T073519Z/task1/rollouts/trial01/attempt_001/trajectory.npz",
+      "sha256": "4c91dce3b43a8ef7afa570fd3caa8b38b1326bf29629db07ae76e9d9a2ce615a",
+      "shape": [
+        250,
+        1024
+      ],
+      "status": "valid",
+      "absolute_errors": {
+        "D": 0.0,
+        "V": 0.0,
+        "R": 0.0,
+        "G": 0.0
+      }
+    },
+    {
+      "path": "experiments/pi_rl/pi05_sft_libero10_tasks129_mani_ode480_20261102T073519Z/task2/rollouts/trial00/attempt_001/trajectory.npz",
+      "sha256": "2b51a1e99cd771cdd3477b1f452d5bcc54e5e55929bd66282f5749f2f0d028f3",
+      "shape": [
+        250,
+        1024
+      ],
+      "status": "valid",
+      "absolute_errors": {
+        "D": 0.0,
+        "V": 0.0,
+        "R": 0.0,
+        "G": 0.0
+      }
+    },
+    {
+      "path": "experiments/pi_rl/pi05_sft_libero10_tasks129_mani_ode480_20261102T073519Z/task2/rollouts/trial01/attempt_001/trajectory.npz",
+      "sha256": "77f090920580770db8a039a38f0819687bdbe3b6c06369c4e2d90032c3cd5ed8",
+      "shape": [
+        250,
+        1024
+      ],
+      "status": "valid",
+      "absolute_errors": {
+        "D": 0.0,
+        "V": 0.0,
+        "R": 0.0,
+        "G": 0.0
+      }
+    },
+    {
+      "path": "experiments/pi_rl/pi05_sft_libero10_tasks129_mani_ode480_20261102T073519Z/task9/rollouts/trial00/attempt_001/trajectory.npz",
+      "sha256": "f84a7497b7dc04c1206c3768131a95e174dc0f10cb6389fa55f3ffaa781ed712",
+      "shape": [
+        250,
+        1024
+      ],
+      "status": "valid",
+      "absolute_errors": {
+        "D": 0.0,
+        "V": 0.0,
+        "R": 0.0,
+        "G": 0.0
+      }
+    },
+    {
+      "path": "experiments/pi_rl/pi05_sft_libero10_tasks129_mani_ode480_20261102T073519Z/task9/rollouts/trial01/attempt_001/trajectory.npz",
+      "sha256": "79cd32de0c02edaeed5059f1acdb82d47fb14c6a17b6454d36e154f76c20faa6",
+      "shape": [
+        250,
+        1024
+      ],
+      "status": "valid",
+      "absolute_errors": {
+        "D": 0.0,
+        "V": 0.0,
+        "R": 0.0,
+        "G": 0.0
+      }
+    },
+    {
+      "input": "constant",
+      "status": "invalid",
+      "reason": "All k-NN distances are zero!"
+    },
+    {
+      "input": "short",
+      "status": "invalid",
+      "reason": "insufficient_points"
+    },
+    {
+      "input": "nonfinite",
+      "status": "invalid",
+      "reason": "nonfinite_input"
+    }
+  ]
+}

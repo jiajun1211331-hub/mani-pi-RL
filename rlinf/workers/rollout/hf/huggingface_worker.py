@@ -206,6 +206,10 @@ class MultiStepRolloutWorker(Worker):
         if self.enable_offload:
             self.offload_model()
 
+        from rlinf.algorithms.manifold.snapshot import verify_runtime_source
+
+        verify_runtime_source("rollout")
+
     def setup_sample_params(self):
         # sampling parameters for rollout
         sampling_params = self.cfg.rollout.get("sampling_params", None)
@@ -533,6 +537,13 @@ class MultiStepRolloutWorker(Worker):
             else:
                 kwargs = {"mode": mode}
 
+        if (
+            mode == "train"
+            and self.algorithm_cfg.get("manifold", {}).get("mode", "disabled")
+            != "disabled"
+        ):
+            kwargs = {**kwargs, "collect_manifold_hidden": True}
+
         if model_type in [
             SupportedModel.CNN_POLICY,
             SupportedModel.FLOW_POLICY,
@@ -634,6 +645,7 @@ class MultiStepRolloutWorker(Worker):
             prev_values=result["prev_values"] if self.collect_prev_infos else None,
             intervene_flags=intervene_flags,
             forward_inputs=result["forward_inputs"],
+            manifold_hidden=result.get("manifold_hidden"),
             versions=torch.full_like(
                 result["prev_logprobs"], float(self.version), dtype=torch.float32
             )

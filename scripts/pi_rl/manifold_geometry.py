@@ -12,75 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""FP64 action-level TLE k10 and centered Gram log-volume."""
+"""Compatibility report adapter for the shared FP64 manifold metrics."""
 
-import importlib.metadata
-import math
-import warnings
-
-import numpy as np
+from rlinf.algorithms.manifold.metrics import compute_metrics, require_tle
 
 
 def metrics(features):
-    """Retain numerical warnings and distinguish undefined metrics from zero."""
-    from skdim.id import TLE
+    """Return the original pi0.5 offline report fields using the shared core."""
+    import numpy as np
 
-    if importlib.metadata.version("scikit-dimension") != "0.3.7":
-        raise RuntimeError("Expected scikit-dimension==0.3.7")
-    X = np.asarray(features, dtype=np.float64)
-    if X.ndim != 2 or X.shape[1] != 1024:
-        raise ValueError(f"Expected [N,1024] features, found {X.shape}")
+    require_tle()
+    x = np.asarray(features, dtype=np.float64)
+    if x.ndim != 2 or x.shape[1] != 1024:
+        raise ValueError(f"Expected [N,1024] features, found {x.shape}")
+    values = compute_metrics(x)
     result = {
-        "N": len(X),
-        "k": 10,
-        "D": None,
-        "V": None,
-        "R": None,
-        "G": None,
-        "warnings": [],
-        "status": "invalid",
+        "N": values.n,
+        "k": values.k,
+        "D": values.dimension.value,
+        "V": values.volume.value,
+        "R": values.ratio.value,
+        "G": values.score.value,
+        "status": "valid" if values.score.valid else "invalid",
+        **values.diagnostics,
     }
-    if len(X) <= 10 or not np.isfinite(X).all():
-        result["reason"] = "insufficient_points" if len(X) <= 10 else "nonfinite_input"
-        return result
-    centered = X - X.mean(axis=0)
-    eigenvalues = np.linalg.eigvalsh(centered @ centered.T)
-    tolerance = 1e-12 + 1e-10 * max(float(eigenvalues[-1]), 0.0)
-    result.update(
-        gram_min_eigenvalue=float(eigenvalues[0]),
-        gram_negative_tolerance=tolerance,
-        gram_negative_count=int((eigenvalues < 0).sum()),
-    )
-    if eigenvalues[0] < -tolerance:
-        result["reason"] = "negative_spectrum_outside_tolerance"
-        return result
-    result["V"] = float(
-        0.5 * np.log1p((1024 / len(X)) * np.maximum(eigenvalues, 0)).sum()
-    )
-    try:
-        with warnings.catch_warnings(record=True) as caught:
-            warnings.simplefilter("always")
-            estimator = TLE(epsilon=1e-4).fit(X, n_neighbors=10, n_jobs=1)
-        result["warnings"] = sorted({str(w.message) for w in caught})
-        local = np.asarray(estimator.dimension_pw_)
-        result["tle_local_valid_count"] = int(np.isfinite(local).sum())
-        dimension = float(np.mean(local))
-        if (
-            not np.isfinite(local).all()
-            or not math.isfinite(dimension)
-            or dimension <= 0
-        ):
-            result["reason"] = "invalid_local_dimensions"
-            return result
-        result["D"] = dimension
-        if result["V"] <= 0 or not math.isfinite(result["V"]):
-            result["reason"] = "invalid_volume"
-            return result
-        result.update(
-            R=dimension / result["V"],
-            G=result["V"] * math.exp(-0.1 * dimension),
-            status="valid",
+    if "computed_volume" in result:
+        result["V"] = result.pop("computed_volume")
+    if not values.score.valid:
+        # The offline report historically prioritizes TLE errors after volume
+        # computation, while the training core keeps each metric's own reason.
+        result["reason"] = (
+            values.diagnostics.get("tle_error")
+            or values.dimension.reason
+            or values.volume.reason
+            or values.score.reason
         )
-    except ValueError as error:
-        result["reason"] = str(error)
     return result

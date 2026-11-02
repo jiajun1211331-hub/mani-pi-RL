@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import asyncio
 import importlib.util
+import os
+import random
 import sys
 import time
 from pathlib import Path
@@ -1540,3 +1542,162 @@ def test_cosmos3_sglang_response_keeps_every_env_in_input_order():
     assert actions.shape == (2, 16, 7)
     assert torch.all(actions[0, :, 6] == -0.5)
     assert torch.all(actions[1, :, 6] == 0.5)
+
+
+@pytest.fixture(scope="module")
+def pi05_manifold_model():
+    """Load a real pi0.5 checkpoint only for explicit accelerator verification."""
+    checkpoint = os.environ.get("RLINF_PI05_TEST_CHECKPOINT")
+    if not checkpoint:
+        pytest.skip("Set RLINF_PI05_TEST_CHECKPOINT for the real pi0.5 model test")
+    if Worker.torch_device_type == "cpu":
+        pytest.skip("Real pi0.5 feature equivalence requires an accelerator")
+    from rlinf.models.embodiment.openpi import get_model as build_openpi
+
+    cfg = OmegaConf.load(
+        Path(__file__).resolve().parents[2]
+        / "examples/embodiment/config/model/pi0_5.yaml"
+    )
+    cfg.model_path = checkpoint
+    cfg.precision = "bf16"
+    cfg.num_steps = 4
+    cfg.openpi.torch_compile = False
+    model = build_openpi(cfg).to(f"{Worker.torch_device_type}:0").eval()
+    yield model
+    del model
+    Worker.torch_platform.empty_cache()
+
+
+@pytest.mark.parametrize("compiled", [False, True])
+def test_pi05_manifold_features_preserve_real_rollout(pi05_manifold_model, compiled):
+    from rlinf.models.embodiment.openpi.modules.utils import set_torch_compile
+
+    model = pi05_manifold_model
+    set_torch_compile(compiled)
+    obs = {
+        "main_images": torch.zeros((1, 224, 224, 3), dtype=torch.uint8),
+        "wrist_images": torch.full((1, 224, 224, 3), 127, dtype=torch.uint8),
+        "states": torch.zeros((1, 8)),
+        "task_descriptions": ["put the white mug on the left plate"],
+    }
+    projected = []
+    handle = model.action_out_proj.register_forward_pre_hook(
+        lambda module, inputs: projected.append(inputs[0].detach().clone())
+    )
+    try:
+        # Warm the actual kernels before comparing complete RNG consumption.
+        model.predict_action_batch(obs, mode="train")
+        projected.clear()
+        random.seed(107)
+        np.random.seed(107)
+        torch.manual_seed(107)
+        Worker.torch_platform.manual_seed_all(107)
+        generator = torch.Generator(device=model.device).manual_seed(108)
+
+        def rng_state():
+            return (
+                random.getstate(),
+                np.random.get_state(),
+                torch.get_rng_state().clone(),
+                [state.clone() for state in Worker.torch_platform.get_rng_state_all()],
+                generator.get_state().clone(),
+            )
+
+        def restore(state):
+            random.setstate(state[0])
+            np.random.set_state(state[1])
+            torch.set_rng_state(state[2])
+            Worker.torch_platform.set_rng_state_all(state[3])
+            generator.set_state(state[4])
+
+        initial = rng_state()
+        actions_off, off = model.predict_action_batch(obs, mode="train", rng=generator)
+        rng_off = rng_state()
+        assert "manifold_hidden" not in off
+        assert len(projected) == 4
+        projected.clear()
+        restore(initial)
+        actions_on, on = model.predict_action_batch(
+            obs, mode="train", rng=generator, collect_manifold_hidden=True
+        )
+        rng_on = rng_state()
+        torch.testing.assert_close(actions_off, actions_on, rtol=0, atol=0)
+        for key in ("prev_logprobs", "prev_values", "model_actions"):
+            torch.testing.assert_close(off[key], on[key], rtol=0, atol=0)
+        for key in ("chains", "denoise_inds"):
+            torch.testing.assert_close(
+                off["forward_inputs"][key], on["forward_inputs"][key], rtol=0, atol=0
+            )
+        assert rng_off[0] == rng_on[0]
+        np.testing.assert_equal(rng_off[1], rng_on[1])
+        torch.testing.assert_close(rng_off[2], rng_on[2], rtol=0, atol=0)
+        for left, right in zip(rng_off[3], rng_on[3], strict=True):
+            torch.testing.assert_close(left, right, rtol=0, atol=0)
+        torch.testing.assert_close(rng_off[4], rng_on[4], rtol=0, atol=0)
+        assert len(projected) == 4
+        hidden = on["manifold_hidden"]
+        assert hidden.shape == (1, 10, 1024)
+        assert hidden.dtype == torch.float32
+        assert not hidden.requires_grad and hidden.grad_fn is None
+        assert "manifold_hidden" not in on["forward_inputs"]
+        torch.testing.assert_close(hidden, projected[-1][:, :10], rtol=0, atol=0)
+        assert (
+            hidden.untyped_storage().data_ptr()
+            != projected[-1].untyped_storage().data_ptr()
+        )
+        assert torch.isfinite(on["prev_logprobs"]).all()
+        _, evaluation = model.predict_action_batch(
+            obs, mode="eval", collect_manifold_hidden=True
+        )
+        assert "manifold_hidden" not in evaluation
+    finally:
+        handle.remove()
+        set_torch_compile(True)
+
+
+def test_pi05_manifold_worker_enables_collection_only_during_training(
+    pi05_manifold_model,
+):
+    from rlinf.models.embodiment.openpi.modules.utils import set_torch_compile
+    from rlinf.workers.rollout.hf.huggingface_worker import MultiStepRolloutWorker
+
+    set_torch_compile(False)
+    worker = object.__new__(MultiStepRolloutWorker)
+    worker.hf_model = pi05_manifold_model
+    worker._timer_metrics = {}
+    worker._accelerator_type = Worker.accelerator_type
+    worker.model_cfg = OmegaConf.create(
+        {"model_type": "openpi", "num_action_chunks": 10}
+    )
+    worker.enable_dagger = False
+    worker.expert_model = None
+    worker._train_sampling_params = {}
+    worker._eval_sampling_params = {}
+    worker.collect_prev_infos = True
+    worker.version = 7
+    obs = {
+        "main_images": torch.zeros(1, 224, 224, 3, dtype=torch.uint8),
+        "wrist_images": torch.full((1, 224, 224, 3), 127, dtype=torch.uint8),
+        "states": torch.zeros(1, 8),
+        "task_descriptions": ["put the white mug on the left plate"],
+    }
+    try:
+        for mode in ("disabled", "task_plus_geometry", "geometry_only"):
+            worker.algorithm_cfg = OmegaConf.create({"manifold": {"mode": mode}})
+            actions, result = worker.predict(obs, mode="train")
+            output = worker._build_policy_output(actions, result)
+            if mode == "disabled":
+                assert (
+                    "manifold_hidden" not in result and output.manifold_hidden is None
+                )
+            else:
+                assert output.manifold_hidden.shape == (1, 10, 1024)
+                assert output.manifold_hidden.dtype == torch.float32
+                assert output.manifold_hidden.device.type == "cpu"
+                assert not output.manifold_hidden.requires_grad
+                assert "manifold_hidden" not in output.forward_inputs
+                assert (output.versions == 7).all()
+            _, evaluation = worker.predict(obs, mode="eval")
+            assert "manifold_hidden" not in evaluation
+    finally:
+        set_torch_compile(True)

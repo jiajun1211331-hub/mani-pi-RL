@@ -1,0 +1,39 @@
+defaults:
+  - libero_10_grpo_openpi_pi05_mani_v1
+  - _self_
+
+cluster:
+  component_placement:
+    actor,env,rollout: 0-1
+
+runner:
+  logger:
+    experiment_name: libero_10_grpo_openpi_pi05_mani_v1_smoke
+  max_epochs: 1
+  save_interval: 1
+  val_check_interval: 1
+
+algorithm:
+  update_epoch: 1
+
+env:
+  train:
+    total_num_envs: 16
+    rollout_epoch: 1
+    video_cfg:
+      save_video: false
+  eval:
+    total_num_envs: 2
+    rollout_epoch: 1
+    video_cfg:
+      save_video: false
+
+actor:
+  micro_batch_size: 2
+  global_batch_size: 32
+  model:
+    openpi:
+      torch_compile: false
+
+rollout:
+  enable_torch_compile: false

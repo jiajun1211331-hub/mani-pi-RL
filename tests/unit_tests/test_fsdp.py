@@ -39,7 +39,7 @@ from rlinf.hybrid_engines.fsdp.mixed_precision import (
     get_mixed_precision_wrap_policy,
 )
 from rlinf.hybrid_engines.fsdp.utils import apply_fsdp2_to_model, create_device_mesh
-from rlinf.scheduler import Worker
+from rlinf.scheduler import AcceleratorType, Worker
 from rlinf.scheduler.cluster import Cluster
 
 # The timeout a bare init_process_group() installs is backend-specific -- 30
@@ -1110,3 +1110,482 @@ def test_openpi_sft_uses_activation_checkpointing(monkeypatch):
     assert model.img.stem.weight.grad is not None
     assert model.llm.layers[0].attn.q_proj[0].weight.grad is not None
     assert model.action_out_proj.weight.grad is not None
+
+
+def _manifold_optimizer_boundary_contract(rank, init_file):
+    import copy
+    import json
+    from contextlib import nullcontext
+    from pathlib import Path
+
+    from rlinf.hybrid_engines.fsdp import FSDP, ShardingStrategy
+    from rlinf.hybrid_engines.fsdp.strategy.fsdp import FSDPStrategy
+    from rlinf.utils.logging import get_logger
+    from rlinf.utils.utils import get_loss_agg_func
+    from rlinf.workers.actor.embodied_fsdp_actor_worker import EmbodiedFSDPActor
+
+    os.environ["LOCAL_RANK"] = str(rank)
+    Worker.torch_platform.set_device(rank)
+    device = torch.device(f"{Worker.torch_device_type}:{rank}")
+    dist.init_process_group(
+        "nccl",
+        init_method=f"file://{init_file}",
+        rank=rank,
+        world_size=2,
+        timeout=timedelta(seconds=120),
+    )
+
+    class ChunkLogprobPolicy(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = nn.Parameter(torch.zeros(1, device=device))
+            self.calls = 0
+
+        def forward(self, forward_inputs, **kwargs):
+            self.calls += 1
+            return {"logprobs": self.weight * forward_inputs["x"]}
+
+    def equal_state(left, right):
+        if isinstance(left, torch.Tensor):
+            assert torch.equal(left, right)
+        elif isinstance(left, dict):
+            assert left.keys() == right.keys()
+            for key in left:
+                equal_state(left[key], right[key])
+        elif isinstance(left, (list, tuple)):
+            assert len(left) == len(right)
+            for a, b in zip(left, right, strict=True):
+                equal_state(a, b)
+        else:
+            assert left == right
+
+    try:
+        cfg = OmegaConf.create(
+            {
+                "actor": {
+                    "seed": 42,
+                    "global_batch_size": 8,
+                    "micro_batch_size": 2,
+                    "model": {
+                        "model_type": "openpi",
+                        "num_action_chunks": 10,
+                        "action_dim": 1,
+                    },
+                    "optim": {"clip_grad": 10.0},
+                    "fsdp_config": {"enable_gradient_accumulation": True},
+                },
+                "algorithm": {
+                    "manifold": {"mode": "task_plus_geometry"},
+                    "loss_type": "actor",
+                    "adv_type": "grpo",
+                    "update_epoch": 1,
+                    "reward_type": "chunk_level",
+                    "logprob_type": "chunk_level",
+                    "clip_ratio_low": 0.2,
+                    "clip_ratio_high": 0.2,
+                    "entropy_bonus": 0,
+                },
+                "runner": {"task_type": "embodied"},
+                "env": {"train": {"max_episode_steps": 10}},
+            }
+        )
+        actor = object.__new__(EmbodiedFSDPActor)
+        actor.cfg = cfg
+        actor._timer_metrics = {}
+        actor._accelerator_type = Worker.accelerator_type
+        actor._rank = rank
+        actor._world_size = 2
+        actor.device = device
+        actor.torch_platform = Worker.torch_platform
+        actor.manifold_enabled = True
+        actor.is_weight_offloaded = actor.is_optimizer_offloaded = False
+        actor.enable_sft_co_train = False
+        actor.gradient_accumulation = 2
+        actor.optimizer_steps = actor.critic_warmup_steps = 0
+        actor._logger = get_logger()
+        actor.amp_context = nullcontext()
+        actor.loss_agg_func = get_loss_agg_func("token-mean")
+        actor.model = FSDP(
+            ChunkLogprobPolicy(),
+            device_id=device,
+            use_orig_params=True,
+            sharding_strategy=ShardingStrategy.NO_SHARD,
+        )
+        actor._strategy = FSDPStrategy(cfg.actor, world_size=2, logger=actor._logger)
+        actor.optimizer = torch.optim.AdamW(
+            actor.model.parameters(), lr=0.01, weight_decay=0.1
+        )
+        actor.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
+            actor.optimizer, lambda step: 0.9**step
+        )
+        actor.grad_scaler = actor.build_grad_scaler(enabled=False)
+
+        def rollout(active):
+            advantages = torch.zeros(1, 8, 1)
+            if active and rank == 1:
+                generator = torch.Generator().manual_seed(42 + rank)
+                order = torch.randperm(8, generator=generator)
+                advantages[0, order[:4], 0] = 1
+            return {
+                "advantages": advantages,
+                "prev_logprobs": torch.zeros(1, 8, 10, 1),
+                "forward_inputs": {"x": torch.ones(1, 8, 10, 1)},
+                "loss_mask": torch.full((1, 8, 1), rank == 1, dtype=torch.bool),
+                "loss_mask_sum": torch.full((1, 8, 1), 10),
+            }
+
+        before = [parameter.detach().clone() for parameter in actor.model.parameters()]
+        scheduler_before = actor.lr_scheduler.last_epoch
+        actor.rollout_batch = rollout(True)
+        metrics = actor.run_training()
+        assert metrics["manifold/optimizer_updates"] == 1
+        assert metrics["manifold/optimizer_skips"] == 1
+        assert actor.optimizer_steps == 1
+        assert actor.lr_scheduler.last_epoch == scheduler_before + 1
+        assert actor.model.module.calls == 2
+        assert any(
+            not torch.equal(a, b)
+            for a, b in zip(before, actor.model.parameters(), strict=True)
+        )
+        optimizer_before = copy.deepcopy(actor.optimizer.state_dict())
+        scheduler_before = copy.deepcopy(actor.lr_scheduler.state_dict())
+        scaler_before = copy.deepcopy(actor.grad_scaler.state_dict())
+        parameters_before = [
+            parameter.detach().clone() for parameter in actor.model.parameters()
+        ]
+        actor.rollout_batch = rollout(False)
+        metrics = actor.run_training()
+        assert metrics["manifold/optimizer_updates"] == 0
+        assert metrics["manifold/optimizer_skips"] == 2
+        assert actor.optimizer_steps == 1
+        assert actor.model.module.calls == 2
+        equal_state(actor.optimizer.state_dict(), optimizer_before)
+        equal_state(actor.lr_scheduler.state_dict(), scheduler_before)
+        equal_state(actor.grad_scaler.state_dict(), scaler_before)
+        for a, b in zip(parameters_before, actor.model.parameters(), strict=True):
+            assert torch.equal(a, b)
+        # The disabled path retains native optimizer/scheduler behavior.
+        actor.manifold_enabled = False
+        actor.cfg.algorithm.manifold.mode = "disabled"
+        actor.rollout_batch = rollout(False)
+        metrics = actor.run_training()
+        assert "manifold/optimizer_skips" not in metrics
+        assert actor.optimizer_steps == 3
+        assert actor.model.module.calls == 6
+        assert actor.lr_scheduler.last_epoch == scheduler_before["last_epoch"] + 1
+        assert any(
+            not torch.equal(a, b)
+            for a, b in zip(parameters_before, actor.model.parameters(), strict=True)
+        )
+        # Run scoring, aggregation, scalar audit and training on the same batch.
+        from rlinf.algorithms.manifold.audit import replay_advantages
+
+        actor.manifold_enabled = True
+        actor.version = 3
+        actor.cfg.algorithm.manifold.mode = "task_plus_geometry"
+        actor.cfg.algorithm.manifold.geometry = {"score": "volume"}
+        actor.cfg.algorithm.manifold.diagnostics = {
+            "audit_dir": str(Path(init_file).parent / "audit")
+        }
+        actor.cfg.algorithm.group_size = 8
+        actor.cfg.algorithm.log_group_success_metrics = True
+        actor.cfg.env.train = {
+            "rollout_epoch": 1,
+            "auto_reset": False,
+            "ignore_terminations": False,
+            "max_episode_steps": 30,
+        }
+        batch = _manifold_actor_batch()
+        batch["manifold_context"]["env_rank"][:] = rank
+        batch["manifold_context"]["policy_version"][:] = 3
+        batch["prev_logprobs"] = torch.zeros(3, 8, 10, 1)
+        batch["forward_inputs"]["x"] = (
+            (torch.arange(1, 9).float()[None, :, None, None] / 100)
+            .expand(3, 8, 10, 1)
+            .clone()
+        )
+        actor.rollout_batch = actor._process_received_rollout_batch(batch)
+        rollout_metrics = actor.compute_advantages_and_returns()
+        assert rollout_metrics["manifold/groups/raw"] == 2
+        assert rollout_metrics["manifold/groups/eligible"] == 2
+        path = actor._manifold_audit.last_batch
+        record = json.loads(path.read_text())
+        replayed = replay_advantages(record)
+        torch.testing.assert_close(
+            replayed.final, actor._manifold_advantages.final, rtol=0, atol=0
+        )
+        training = actor.run_training()
+        assert training["manifold/optimizer_updates"] == 6
+        assert training["manifold/optimizer_skips"] == 0
+        assert actor.optimizer_steps == 9
+        updates = json.loads(path.read_text().splitlines()[-1])
+        assert updates["event"] == "updates"
+        assert updates["updates"] == training["manifold/optimizer_updates"]
+        assert updates["optimizer_steps"] == actor.optimizer_steps
+        assert not list(path.parent.glob("*.npz"))
+        # A subsequent all-failed batch records skips against its own audit.
+        optimizer_before = copy.deepcopy(actor.optimizer.state_dict())
+        scheduler_before = copy.deepcopy(actor.lr_scheduler.state_dict())
+        parameters_before = [
+            parameter.detach().clone() for parameter in actor.model.parameters()
+        ]
+        actor.version = 4
+        failed = _manifold_actor_batch(state="all_failed")
+        failed["manifold_context"]["env_rank"][:] = rank
+        failed["manifold_context"]["collector_step"][:] = 4
+        failed["manifold_context"]["policy_version"][:] = 4
+        failed["prev_logprobs"] = torch.zeros(3, 8, 10, 1)
+        failed["forward_inputs"]["x"] = torch.ones(3, 8, 10, 1)
+        actor.rollout_batch = actor._process_received_rollout_batch(failed)
+        diagnostics = actor.compute_advantages_and_returns()
+        assert diagnostics["manifold/groups/all_failed"] == 2
+        assert diagnostics["manifold/selected_score/count"] == 0
+        failed_path = actor._manifold_audit.last_batch
+        assert failed_path != path
+        training = actor.run_training()
+        assert training["manifold/optimizer_updates"] == 0
+        assert training["manifold/optimizer_skips"] == 6
+        assert actor.optimizer_steps == 9
+        equal_state(actor.optimizer.state_dict(), optimizer_before)
+        equal_state(actor.lr_scheduler.state_dict(), scheduler_before)
+        for left, right in zip(
+            parameters_before, actor.model.parameters(), strict=True
+        ):
+            assert torch.equal(left, right)
+        failed_updates = json.loads(failed_path.read_text().splitlines()[-1])
+        assert failed_updates["updates"] == 0 and failed_updates["skips"] == 6
+        assert failed_updates["scheduler_advanced"] is False
+    finally:
+        dist.destroy_process_group()
+
+
+@pytest.mark.skipif(
+    Worker.torch_device_type != "cuda" or Worker.torch_platform.device_count() < 2,
+    reason="Requires two CUDA GPUs for native FSDP training",
+)
+def test_manifold_empty_updates_preserve_optimizer_and_scheduler_state(tmp_path):
+    torch.multiprocessing.spawn(
+        _manifold_optimizer_boundary_contract,
+        args=(str(tmp_path / "manifold_fsdp_init"),),
+        nprocs=2,
+        join=True,
+    )
+
+
+def _manifold_actor_batch(state="mixed", with_manifold=True):
+    chunks, batch, actions = 3, 8, 10
+    dones = torch.zeros(chunks, batch, actions, dtype=torch.bool)
+    successes = torch.zeros_like(dones)
+    dones[-1, :, -1] = True
+    if state != "all_failed":
+        selected = slice(None) if state == "all_success" else slice(0, 1)
+        dones[1, selected, 6] = True
+        successes[1, selected, 6] = True
+    result = {
+        "rewards": successes.float(),
+        "dones": torch.cat((torch.zeros_like(dones[:1]), dones)),
+        "prev_logprobs": torch.zeros(chunks, batch, actions, 7),
+        "forward_inputs": {"action": torch.zeros(chunks, batch, 70)},
+    }
+    if with_manifold:
+        context = {
+            name: torch.full((chunks, batch), value, dtype=torch.int64)
+            for name, value in {
+                "policy_version": 9,
+                "collector_step": 3,
+                "rollout_epoch": 0,
+                "env_rank": 0,
+                "stage_id": 0,
+                "group_slot": 0,
+                "task_id": 0,
+                "trial_id": 4,
+                "reset_state_id": 4,
+            }.items()
+        }
+        context["member_id"] = torch.arange(batch).expand(chunks, -1)
+        context["chunk_id"] = torch.arange(chunks)[:, None].expand(-1, batch)
+        context.update(
+            action_dones=dones,
+            action_successes=successes,
+            action_valid=torch.ones_like(dones),
+        )
+        generator = torch.Generator().manual_seed(81)
+        hidden = torch.randn(chunks, batch, actions, 1024, generator=generator)
+        hidden[..., 4:] = 0
+        hidden *= torch.linspace(0.5, 2, batch)[None, :, None, None]
+        result.update(manifold_hidden=hidden, manifold_context=context)
+    return result
+
+
+def _manifold_actor_config(mode):
+    return OmegaConf.create(
+        {
+            "runner": {"task_type": "embodied"},
+            "env": {
+                "train": {
+                    "rollout_epoch": 1,
+                    "auto_reset": False,
+                    "ignore_terminations": False,
+                }
+            },
+            "actor": {"model": {"num_action_chunks": 10}},
+            "algorithm": {
+                "manifold": {"mode": mode, "geometry": {"score": "volume"}},
+                "adv_type": "grpo",
+                "reward_type": "chunk_level",
+                "group_size": 8,
+                "filter_rewards": True,
+                "rewards_lower_bound": 0.1,
+                "rewards_upper_bound": 0.9,
+            },
+        }
+    )
+
+
+@pytest.mark.parametrize("mode", ["task_plus_geometry", "geometry_only"])
+@pytest.mark.parametrize("state", ["mixed", "all_success", "all_failed"])
+def test_manifold_actor_scores_before_shuffle_and_releases_features(
+    tmp_path, monkeypatch, mode, state
+):
+    import gc
+    import weakref
+
+    from rlinf.workers.actor.embodied_fsdp_actor_worker import EmbodiedFSDPActor
+
+    monkeypatch.setattr(Worker, "torch_platform", torch.cpu)
+    dist.init_process_group(
+        "gloo", init_method=f"file://{tmp_path / 'actor_init'}", rank=0, world_size=1
+    )
+    try:
+        actor = object.__new__(EmbodiedFSDPActor)
+        actor.cfg = _manifold_actor_config(mode)
+        actor.cfg.algorithm.manifold.diagnostics = {
+            "audit_dir": str(tmp_path / "audit")
+        }
+        actor.cfg.algorithm.log_group_success_metrics = True
+        actor._rank = 0
+        actor.version = 0
+        actor._timer_metrics = {}
+        actor._accelerator_type = AcceleratorType.NO_ACCEL
+        actor.manifold_enabled = True
+        actor.rollout_batch = actor._process_received_rollout_batch(
+            _manifold_actor_batch(state)
+        )
+        hidden = weakref.ref(actor.rollout_batch["manifold_hidden"])
+        metrics = EmbodiedFSDPActor.compute_advantages_and_returns.__wrapped__(actor)
+        assert metrics["manifold/groups/raw"] == 1
+        assert metrics["group_filter_keep_fraction"] == (
+            0 if state == "all_failed" else 1
+        )
+        assert (
+            metrics[
+                f"group_success_{8 if state == 'all_success' else 0 if state == 'all_failed' else 1}_of_8_fraction"
+            ]
+            == 1
+        )
+        gc.collect()
+        assert hidden() is None
+        assert "manifold_hidden" not in actor.rollout_batch
+        assert "manifold_context" not in actor.rollout_batch
+        assert torch.isfinite(actor.rollout_batch["advantages"]).all()
+        if state == "all_success":
+            # The legacy 0.9 reward bound cannot remove this valid geometry group.
+            assert actor.rollout_batch["loss_mask"].any()
+            assert actor.rollout_batch["advantages"].any()
+            assert not actor._manifold_advantages.task.any()
+        elif state == "all_failed":
+            assert not actor.rollout_batch["loss_mask"].any()
+            assert not actor.rollout_batch["advantages"].any()
+        if mode == "geometry_only":
+            assert not actor.rollout_batch["advantages"][1:].any()
+    finally:
+        dist.destroy_process_group()
+
+
+def test_manifold_disabled_preserves_baseline_advantage_mask_loss_and_rng(
+    tmp_path, monkeypatch
+):
+    import copy
+    import importlib.util
+    import subprocess
+
+    from rlinf.algorithms.registry import policy_loss
+    from rlinf.workers.actor.embodied_fsdp_actor_worker import EmbodiedFSDPActor
+
+    original_file = tmp_path / "baseline_actor.py"
+    original_file.write_bytes(
+        subprocess.check_output(
+            [
+                "git",
+                "show",
+                "051b23348ead20c06c336bd743c590a9b6c4ba17:rlinf/workers/actor/embodied_fsdp_actor_worker.py",
+            ]
+        )
+    )
+    spec = importlib.util.spec_from_file_location(
+        "baseline_manifold_actor", original_file
+    )
+    original = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(original)
+    monkeypatch.setattr(Worker, "torch_platform", torch.cpu)
+    dist.init_process_group(
+        "gloo", init_method=f"file://{tmp_path / 'baseline_init'}", rank=0, world_size=1
+    )
+    try:
+        actors = []
+        rng = torch.get_rng_state().clone()
+        for cls in (original.EmbodiedFSDPActor, EmbodiedFSDPActor):
+            actor = object.__new__(cls)
+            actor.cfg = _manifold_actor_config("disabled")
+            actor._timer_metrics = {}
+            actor._accelerator_type = AcceleratorType.NO_ACCEL
+            actor.manifold_enabled = False
+            actor.rollout_batch = actor._process_received_rollout_batch(
+                copy.deepcopy(_manifold_actor_batch(with_manifold=False))
+            )
+            cls.compute_advantages_and_returns.__wrapped__(actor)
+            actors.append(actor)
+            assert torch.equal(torch.get_rng_state(), rng)
+        for name in ("advantages", "loss_mask", "loss_mask_sum"):
+            assert torch.equal(
+                actors[0].rollout_batch[name], actors[1].rollout_batch[name]
+            )
+        losses = []
+        for actor in actors:
+            batch = actor.rollout_batch
+            loss, _ = policy_loss(
+                task_type="embodied",
+                loss_type="actor",
+                reward_type="chunk_level",
+                logprob_type="chunk_level",
+                single_action_dim=7,
+                logprobs=torch.linspace(-0.001, 0.001, 24 * 70).reshape(24, 10, 7),
+                old_logprobs=torch.zeros(24, 10, 7),
+                advantages=batch["advantages"].reshape(24, 1),
+                loss_mask=batch["loss_mask"].reshape(24, 1),
+                loss_mask_sum=batch["loss_mask_sum"].reshape(24, 1),
+                max_episode_steps=30,
+                clip_ratio_low=0.2,
+                clip_ratio_high=0.2,
+            )
+            losses.append(loss)
+        assert torch.equal(losses[0], losses[1])
+    finally:
+        dist.destroy_process_group()
+
+
+def test_manifold_actor_rejects_missing_rollout_payload():
+    from rlinf.workers.actor.embodied_fsdp_actor_worker import EmbodiedFSDPActor
+
+    actor = object.__new__(EmbodiedFSDPActor)
+    actor.cfg = _manifold_actor_config("geometry_only")
+    actor.manifold_enabled = True
+    actor._timer_metrics = {}
+    actor._accelerator_type = AcceleratorType.NO_ACCEL
+    actor.rollout_batch = actor._process_received_rollout_batch(
+        _manifold_actor_batch(with_manifold=False)
+    )
+    with pytest.raises(
+        ValueError, match="requires rollout features and episode context"
+    ):
+        EmbodiedFSDPActor.compute_advantages_and_returns.__wrapped__(actor)
